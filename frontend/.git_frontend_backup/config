@@ -1,0 +1,11 @@
+[core]
+	repositoryformatversion = 0
+	filemode = false
+	bare = false
+	logallrefupdates = true
+	ignorecase = true
+[remote "PruthviPanthers"]
+	url = http://github.com/simpharsh/prithvipanthers
+	fetch = +refs/heads/*:refs/remotes/PruthviPanthers/*
+[branch "master"]
+	vscode-merge-base = PruthviPanthers/master

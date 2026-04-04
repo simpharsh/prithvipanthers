@@ -1,0 +1,60 @@
+/* Container for the button */
+.scroll-to-top {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  width: 60px;
+  height: 60px;
+  background-color: #f05244; /* Brand Red */
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0; /* Hidden by default when at the very top */
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+  z-index: 1000; /* Ensures it stays above all other content */
+  box-shadow: 0 4px 15px rgba(240, 82, 68, 0.4); /* Glow effect matching the red */
+}
+
+/* Class added via React when user scrolls down a bit */
+.scroll-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Hover effect */
+.scroll-to-top:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(240, 82, 68, 0.6);
+}
+
+/* SVG Styling */
+.progress-ring {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotate(-90deg); /* Rotates circle so progress starts at the top */
+}
+
+.progress-ring-track {
+  stroke: rgba(255, 255, 255, 0.3); /* Faint white track */
+}
+
+.progress-ring-circle {
+  stroke: #ffffff; /* Solid white for the progress */
+  transition: stroke-dashoffset 0.1s linear; /* Smooth fill animation */
+  stroke-linecap: round; /* Gives the progress line rounded ends */
+}
+
+/* Icon Styling */
+.scroll-icon {
+  color: #ffffff;
+  font-size: 26px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px; /* Slight optical adjustment for the chevron */
+}   

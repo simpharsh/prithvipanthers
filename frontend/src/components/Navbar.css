@@ -1,0 +1,78 @@
+/* Container styling */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 50px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #eaeaea; /* Optional: adds a subtle line under the navbar */
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* Left side: Logo and Brand Name */
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 15px; /* Space between logo and text */
+}
+
+.logo {
+  height: 55px; /* Adjust this to match the exact size you need */
+  width: auto;
+}
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Right side: Links and Button */
+.navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 40px; /* Space between the links menu and the button */
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  gap: 30px; /* Space between each link */
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #000000;
+  font-weight: 600;
+  font-size: 15px;
+  padding-bottom: 4px;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Hover and Active states for links */
+.nav-links li a:hover,
+.nav-links li a.active {
+  color: #f05244; /* The specific red from your design */
+  border-bottom: 2px solid #f05244;
+}
+
+/* Contact Us Button */
+.contact-btn {
+  background-color: #f05244;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.contact-btn:hover {
+  background-color: #d84538; /* Slightly darker red for hover effect */
+}
