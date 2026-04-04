@@ -36,3 +36,7 @@ backend/coverage/
 Thumbs.db
 .vscode/
 .idea/
+
+# Internal tooling / backups
+.planning/
+frontend/.git_frontend_backup/
