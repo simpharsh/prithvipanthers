@@ -1,0 +1,238 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+.contact-page {
+  background: #efefef;
+  width: 100%;
+}
+
+.contact-content {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 26px;
+}
+
+.contact-shell {
+  width: min(100%, calc(100%));
+  margin: 0 auto;
+  border-radius: 0;
+  background: linear-gradient(130deg, #232c3e 0%, #303b52 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 34px rgba(12, 18, 29, 0.14);
+}
+
+.contact-shell-inner {
+  width: min(980px, calc(100% - 40px));
+  margin: 0 auto;
+  padding: 26px 0 56px;
+}
+
+.contact-header {
+  text-align: center;
+  color: #ffffff;
+  margin-bottom: 34px;
+}
+
+.contact-header h1 {
+  margin: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 64px);
+  font-weight: 400;
+  letter-spacing: 1px;
+}
+
+.contact-header p {
+  margin: 10px 0 0;
+  font-family: 'Bebas Neue', sans-serif;
+  color: #c3cad7;
+  font-size: 16px;
+}
+
+.contact-form,
+.contact-info {
+  padding: 0;
+}
+
+.contact-form h2,
+.contact-info h2 {
+  margin: 0 0 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: #ffffff;
+  font-size: 36px;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-form label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: #b7bfce;
+  margin-bottom: 6px;
+}
+
+.contact-form input,
+.contact-form textarea {
+  border: 1px solid #42506a;
+  border-radius: 8px;
+  padding: 11px 12px;
+  margin-bottom: 12px;
+  font-size: 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  background: rgba(23, 29, 41, 0.35);
+  color: #ffffff;
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: #8993a8;
+}
+
+.contact-form textarea {
+  resize: vertical;
+  min-height: 74px;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-color: #f45a46;
+  box-shadow: 0 0 0 2px rgba(244, 90, 70, 0.2);
+}
+
+.contact-captcha {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 2px 0 12px;
+  color: #d3d8e2;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.contact-captcha input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.contact-form button {
+  border: none;
+  border-radius: 7px;
+  padding: 12px 18px;
+  width: 100%;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #fff;
+  background: #f45a46;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.contact-form button:hover {
+  background: #e64e3b;
+  transform: translateY(-1px);
+}
+
+.contact-status {
+  margin: 14px 0 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+}
+
+.contact-status.success {
+  color: #53d79b;
+}
+
+.contact-status.error {
+  color: #ff9188;
+}
+
+.contact-info {
+  padding-left: 8px;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.info-icon {
+  color: #f45a46;
+  font-size: 17px;
+  line-height: 1;
+  margin-top: 3px;
+}
+
+.info-row h3 {
+  margin: 0 0 4px;
+  font-family: 'Bebas Neue', sans-serif;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.info-row p {
+  margin: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  color: #bdc5d4;
+  font-size: 14px;
+}
+
+@media (max-width: 900px) {
+  .contact-shell-inner {
+    padding: 24px 0 40px;
+  }
+
+  .contact-header {
+    margin-bottom: 24px;
+  }
+
+  .contact-content {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .contact-info {
+    padding-left: 0;
+  }
+
+  .contact-form h2,
+  .contact-info h2 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 520px) {
+  .contact-page {
+    padding: 30px 0 42px;
+  }
+
+  .contact-shell {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .contact-shell-inner {
+    width: min(100%, calc(100% - 20px));
+  }
+
+  .contact-header h1 {
+    font-size: 44px;
+  }
+
+  .contact-header p {
+    font-size: 14px;
+  }
+}
+

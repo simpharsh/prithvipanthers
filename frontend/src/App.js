@@ -5,6 +5,9 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Home from './components/home';
 import About from './components/about';
+import Player from './components/player';
+import Gallery from './components/gallery';
+import Contact from './components/contact';
 import Footer from './components/footer';
 import ScrollToTop from './components/scrolltotop';
 
@@ -20,7 +23,9 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            {/* We will add Player and Gallery here later! */}
+            <Route path="/player" element={<Player />} />
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/contact" element={<Contact />} />
           </Routes>
         </div>
         

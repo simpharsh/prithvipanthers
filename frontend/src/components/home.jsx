@@ -1,35 +1,33 @@
-// src/components/Home.jsx (Fully Updated)
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import './home.css';
+import HeroSlider from './homeSections/HeroSlider';
+import AboutSection from './homeSections/AboutSection';
+import MediaSection from './homeSections/MediaSection';
+import AchievementsSection from './homeSections/AchievementsSection';
+import OwnersSection from './homeSections/OwnersSection';
+import SponsorsBenefitsSection from './homeSections/SponsorsBenefitsSection';
 
-// ================= IMAGE IMPORTS =================
-
-// --- SLIDER IMAGES ---
+// Exact image paths requested
 import slider1 from '../assets/home/slider-1.jpeg';
 import slider2 from '../assets/home/slider-2.jpeg';
 import slider3 from '../assets/home/slider-3.jpeg';
 
-// --- MEDIA IMAGES ---
+import aboutImage1 from '../assets/about/image-1.jpeg';
+import aboutImage2 from '../assets/about/image-2.jpeg';
 import media1 from '../assets/home/media-1.jpeg';
 import media2 from '../assets/home/media-2.jpeg';
 import media3 from '../assets/home/media-3.jpeg';
 import media4 from '../assets/home/media-4.jpeg';
 import media5 from '../assets/home/media-5.jpeg';
-
-// --- ACHIEVEMENT IMAGES ---
 import achPriyanshu from '../assets/home/achivment-priyanshu.jpeg';
 import achMohit from '../assets/home/achivment-mohit.jpeg';
 import achPureanshu from '../assets/home/achivment-pureanshu.jpeg';
 import achJay from '../assets/home/achivment-jay.jpeg';
-
-// --- OWNER IMAGES ---
 import ownerAjay from '../assets/about/ajay.jpeg';
 import ownerGirish from '../assets/about/girish.jpeg';
 import ownerJugal from '../assets/about/jugal.jpeg';
 import ownerShailesh from '../assets/about/shailesh.jpeg';
-
-// --- NEW SPONSOR LOGO IMAGES ---
-import vishh from '../assets/home/vishh.png'; // Please double-check spelling (vishh vs vish)
+import vishh from '../assets/home/vishh.png';
 import tremont from '../assets/home/tremont.png';
 import spa from '../assets/home/spa.png';
 import rajwanshi from '../assets/home/rajwanshi.png';
@@ -38,230 +36,224 @@ import nptsi from '../assets/home/nptsi.png';
 import bharat from '../assets/home/bharat.png';
 import mahakali from '../assets/home/mahakali.png';
 
-const TARGET_VALUES = { teams: 5, matches: 25, players: 100, minutes: 5040 };
-
 const Home = () => {
-  // ================= STATE & LOGIC =================
+  const stats = useMemo(() => [
+    { value: 5, label: 'TEAMS' },
+    { value: 25, label: 'MATCHES' },
+    { value: 100, label: 'BCA REGISTERED\nPLAYERS' },
+    { value: 5040, label: 'MINUTES OF LIVE\nFOOTAGE ON GLOBAL\nOTT' },
+  ], []);
 
-  // 1. Slider Logic
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const slides = [
-    { id: 0, image: slider1, title: "JOIN THE LEGACY", subtitle: "Be part of something extraordinary, join the Panther family" },
-    { id: 1, image: slider2, title: "TOP 3 FINISH IN BPL 2025", subtitle: "Coming back stronger for BPL 2026" },
-    { id: 2, image: slider3, title: "CHAMPION MINDSET", subtitle: "Unleashing the power of determination and teamwork" }
+  // Updated slider data to match text to specific images
+  const heroSlidesData = [
+    {
+      img: slider1,
+      title: "JOIN THE LEGACY",
+      subtitle: "Be part of something extraordinary, join the Panther family"
+    },
+    {
+      img: slider2,
+      title: "TOP 3 FINISH IN BPL 2025",
+      subtitle: "Coming back stronger for BPL 2026"
+    },
+    {
+      img: slider3,
+      title: "CHAMPION MINDSET",
+      subtitle: "Unleashing the power of determination and teamwork"
+    }
   ];
 
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
+  const [visibleSections, setVisibleSections] = useState({ hero: true });
+  const sectionRefs = useRef({});
+
+  const registerSection = (sectionKey) => (element) => {
+    if (element) {
+      sectionRefs.current[sectionKey] = element;
+    }
+  };
+
+  const aboutPoints = [
+    'Proudly representing Mehsana, Pruthvi Panthers is one of the most passionate and dynamic teams in the Baroda Premier League (BPL), a tournament that brings together cricket, community, and competition at its finest.',
+    'Built on strength, strategy, and ambition, Pruthvi Panthers is more than just a team. It is a symbol of Mehsana\'s fighting spirit. Every season, we step onto the field with one goal: to play fearless cricket and make our city proud.',
+    'In the last BPL season, we finished third on the table, showing that consistency, teamwork, and belief can take us far. But this is just the beginning. The Panthers are ready to roar again in BPL 2026, stronger, sharper, and hungrier than ever before.',
+    'The team is powered by four proud owners from Mehsana, each bringing their own vision and leadership.',
+    'The roar is back. The spirit is stronger. Get ready for BPL 2026.',
+  ];
+
+  const owners = [
+    { id: 1, name: 'AJAY BAROT', role: 'Discipline & Trust', img: ownerAjay },
+    { id: 2, name: 'JUGAL SINGH THAKUR', role: 'Public Leadership', img: ownerJugal },
+    { id: 3, name: 'SHAILESH CHAUHAN', role: 'Business Strategy', img: ownerShailesh },
+    { id: 4, name: 'GIRISH PATEL', role: 'Construction Leadership', img: ownerGirish },
+  ];
+
+  const benefitCards = [
+    { id: 1, text: 'In-stadium branding and activation opportunities.' },
+    { id: 2, text: 'TV/Print/Radio/Hoardings Promotion.' },
+    { id: 3, text: 'Social Media marketing.' },
+    { id: 4, text: 'Brand visibility on broadcast and OTT channel.' },
+    { id: 5, text: 'PR and Print Media with advertising and editorial coverages in top newspapers.' },
+    { id: 6, text: 'Branding on the players uniform.' },
+  ];
+
+  const sponsorLogos = useMemo(() => [
+    { id: 1, img: vishh, alt: 'Vishh Sponsor' },
+    { id: 2, img: tremont, alt: 'Tremont Sponsor' },
+    { id: 3, img: spa, alt: 'SPA Sponsor' },
+    { id: 4, img: rajwanshi, alt: 'Rajwanshi Sponsor' },
+    { id: 5, img: opufnt, alt: 'Opufnt Sponsor' },
+    { id: 6, img: nptsi, alt: 'NPTSI Sponsor' },
+    { id: 7, img: bharat, alt: 'Bharat Sponsor' },
+    { id: 8, img: mahakali, alt: 'Mahakali Sponsor' },
+  ], []);
+
+  const sponsorLoop = useMemo(() => [...sponsorLogos, ...sponsorLogos], [sponsorLogos]);
+  const mediaImages = useMemo(() => [media1, media2, media3, media4, media5], []);
+  const achievementImages = useMemo(() => [achPriyanshu, achMohit, achPureanshu, achJay], []);
+
+  // Slider animation logic
   useEffect(() => {
     const slideInterval = setInterval(() => {
-      setCurrentSlide((prevSlide) => (prevSlide === slides.length - 1 ? 0 : prevSlide + 1));
-    }, 5000);
+      setCurrentSlide((prevSlide) => (prevSlide + 1) % heroSlidesData.length);
+    }, 4500);
     return () => clearInterval(slideInterval);
-  }, [slides.length]);
+  }, [heroSlidesData.length]);
 
-  // 2. Statistics Counter Logic
-  const [counterValues, setCounterValues] = useState({ teams: 0, matches: 0, players: 0, minutes: 0 });
-
+  // Scroll visibility observer
   useEffect(() => {
-    const DURATION_MS = 2000;
-    const INTERVAL_MS = 20;
-    const TOTAL_STEPS = DURATION_MS / INTERVAL_MS;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const key = entry.target.getAttribute('data-section');
+            if (key) {
+              setVisibleSections((prev) => ({ ...prev, [key]: true }));
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.22 }
+    );
 
-    const increments = {
-      teams: TARGET_VALUES.teams / TOTAL_STEPS,
-      matches: TARGET_VALUES.matches / TOTAL_STEPS,
-      players: TARGET_VALUES.players / TOTAL_STEPS,
-      minutes: TARGET_VALUES.minutes / TOTAL_STEPS
+    Object.entries(sectionRefs.current).forEach(([key, node]) => {
+      if (!visibleSections[key] && node) {
+        observer.observe(node);
+      }
+    });
+
+    return () => observer.disconnect();
+  }, [visibleSections]);
+
+  // Stats counter animation
+  useEffect(() => {
+    if (!visibleSections.stats) return;
+
+    let frameId;
+    const duration = 1500;
+    const startTime = performance.now();
+
+    const tick = (now) => {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+
+      setAnimatedStats(stats.map((stat) => Math.round(stat.value * eased)));
+
+      if (progress < 1) {
+        frameId = requestAnimationFrame(tick);
+      }
     };
 
-    let stepCount = 0;
-    const intervalId = setInterval(() => {
-      stepCount++;
-      setCounterValues(() => {
-        return {
-          teams: Math.ceil(Math.min(stepCount * increments.teams, TARGET_VALUES.teams)),
-          matches: Math.ceil(Math.min(stepCount * increments.matches, TARGET_VALUES.matches)),
-          players: Math.ceil(Math.min(stepCount * increments.players, TARGET_VALUES.players)),
-          minutes: Math.ceil(Math.min(stepCount * increments.minutes, TARGET_VALUES.minutes))
-        };
-      });
+    frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
+  }, [stats, visibleSections.stats]);
 
-      if (stepCount >= TOTAL_STEPS) {
-        clearInterval(intervalId);
-        setCounterValues(TARGET_VALUES);
-      }
-    }, INTERVAL_MS);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
-  // 3. Owners Data
-  const owners = [
-    { id: 1, name: "AJAY", role: "Owner & Founder", img: ownerAjay },
-    { id: 2, name: "GIRISH", role: "Director", img: ownerGirish },
-    { id: 3, name: "JUGAL", role: "Operations Head", img: ownerJugal },
-    { id: 4, name: "SHAILESH", role: "Public Relations", img: ownerShailesh }
-  ];
-
-  // 4. Sponsor Benefits Data (from image_6.png)
-  const benefitCards = [
-    { id: 1, text: "In-stadium branding and activation opportunities." },
-    { id: 2, text: "TV/Print/Radio/Hoardings Promotion." },
-    { id: 3, text: "Social Media marketing." },
-    { id: 4, text: "Brand visibility on broadcast and OTT channel." },
-    { id: 5, text: "PR and Print Media with advertising and editorial coverages in top newspapers." },
-    { id: 6, text: "Branding on the players uniform." },
-  ];
-
-  // 5. Sliding Sponsors Data (from prompt)
-  const sponsorLogos = [
-    { id: 1, img: vishh, alt: "Vishh Sponsor" },
-    { id: 2, img: tremont, alt: "Tremont Sponsor" },
-    { id: 3, img: spa, alt: "SPA Sponsor" },
-    { id: 4, img: rajwanshi, alt: "Rajwanshi Sponsor" },
-    { id: 5, img: opufnt, alt: "Opufnt Sponsor" },
-    { id: 6, img: nptsi, alt: "NPTSI Sponsor" },
-    { id: 7, img: bharat, alt: "Bharat Sponsor" },
-    { id: 8, img: mahakali, alt: "Mahakali Sponsor" },
-  ];
-
-  // ================= RENDER =================
   return (
     <div className="home-page">
-      
-      {/* ================= HERO SLIDER SECTION ================= */}
-      <div className="hero-slider-container">
-        {slides.map((slide, index) => (
-          <div key={slide.id} className={`slide ${index === currentSlide ? 'active' : ''}`} style={{ backgroundImage: `url(${slide.image})` }}>
-            <div className="slide-overlay">
-              <div className="slide-content">
-                <h1>{slide.title}</h1>
-                <p>{slide.subtitle}</p>
-                <div className="slider-buttons">
-                  <button className="btn discover-btn">DISCOVER MORE</button>
-                  <button className="btn contact-btn">CONTACT US</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
+      <HeroSlider
+        slides={heroSlidesData}
+        currentSlide={currentSlide}
+        onDotClick={setCurrentSlide}
+      />
 
-        <div className="slider-dots">
-          {slides.map((_, index) => (
-            <span key={index} className={`dot ${index === currentSlide ? 'active-dot' : ''}`} onClick={() => setCurrentSlide(index)}></span>
+      <section
+        className={`stats-section reveal-section ${visibleSections.stats ? 'is-visible' : ''}`}
+        ref={registerSection('stats')}
+        data-section="stats"
+      >
+        <div className="stats-grid">
+          {stats.map((stat, index) => (
+            <div className="stat-card" key={stat.label}>
+              <span className="stat-value">{animatedStats[index]}</span>
+              <span className="stat-label">
+                {stat.label.split('\n').map((line, idx, lines) => (
+                  <React.Fragment key={`${stat.label}-${idx}`}>
+                    {line}
+                    {idx < lines.length - 1 ? <br /> : null}
+                  </React.Fragment>
+                ))}
+              </span>
+            </div>
           ))}
-        </div>
-
-        <div className="statistics-counter-section">
-          <div className="statistic-item">
-            <span className="stat-number">{counterValues.teams}</span>
-            <span className="stat-description">TEAMS</span>
-          </div>
-          <div className="statistic-item">
-            <span className="stat-number">{counterValues.matches}</span>
-            <span className="stat-description">MATCHES</span>
-          </div>
-          <div className="statistic-item">
-            <span className="stat-number">{counterValues.players}</span>
-            <span className="stat-description">BCA REGISTERED<br />PLAYERS</span>
-          </div>
-          <div className="statistic-item">
-            <span className="stat-number">{counterValues.minutes}</span>
-            <span className="stat-description">MINUTES OF LIVE<br />FOOTAGE ON GLOBAL<br />OTT</span>
-          </div>
-        </div>
-      </div>
-
-      {/* ================= HOME CONTENT SECTION ================= */}
-      <div className="home-content-container">
-        
-        {/* MEDIA SECTION */}
-        <section className="media-section">
-          <h2 className="section-title">MEDIA</h2>
-          <div className="media-grid">
-            <div className="media-large"><img src={media1} alt="Media highlight" /></div>
-            <div className="media-small-grid">
-              <img src={media2} alt="Media 2" />
-              <img src={media3} alt="Media 3" />
-              <img src={media4} alt="Media 4" />
-              <img src={media5} alt="Media 5" />
-            </div>
-          </div>
-          <div className="read-more-link">
-            <a href="/gallery">Read More &rarr;</a>
-          </div>
-        </section>
-
-        {/* ACHIEVEMENTS SECTION */}
-        <section className="achievements-section">
-          <h2 className="section-title">PANTHERS ACHIEVEMENTS</h2>
-          <div className="achievements-stack">
-            <div className="achievement-card"><img src={achPriyanshu} alt="Achievement Priyanshu" /></div>
-            <div className="achievement-card"><img src={achMohit} alt="Achievement Mohit" /></div>
-            <div className="achievement-card"><img src={achPureanshu} alt="Achievement Pureanshu" /></div>
-            <div className="achievement-card"><img src={achJay} alt="Achievement Jay" /></div>
-          </div>
-        </section>
-
-        {/* OWNERS SECTION */}
-        <section className="owners-section">
-          <h2 className="section-title">MEET THE OWNERS AND DIRECTORS</h2>
-          <div className="owners-grid">
-            {owners.map((owner) => (
-              <div className="owner-card" key={owner.id}>
-                <div className="owner-image"><img src={owner.img} alt={owner.name} /></div>
-                <div className="owner-info">
-                  <h3>{owner.name}</h3>
-                  <span className="owner-role">{owner.role}</span>
-                  <p className="owner-desc">Dedicated to leading the Panthers to victory with passion and excellence.</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </section>
-
-        {/* ================= NEW SPONSORS BENEFITS SECTION (from image_6.png) ================= */}
-        <section className="sponsors-benefits-section">
-          <h2 className="section-title">SPONSORS BENEFITS</h2>
-          <div className="benefits-grid">
-            {benefitCards.map((card) => (
-              <div key={card.id} className="benefit-card">
-                <div className="card-top-border"></div>
-                <div className="number-circle">{card.id}</div>
-                <div className="benefit-content">
-                  <p className="benefit-text">{card.text}</p>
-                </div>
-                <div className="plus-icon">+</div>
-              </div>
-            ))}
-          </div>
-        </section>
-      </div>
-
-      {/* ================= NEW SLIDING SPONSORS SECTION ================= */}
-      <section className="valued-sponsors-section">
-        {/* Faint, large background text "SPONSORS" */}
-        <h3 className="background-sponsors-title">SPONSORS</h3>
-        
-        <div className="power-partners-info">
-          <h2 className="section-title text-center">POWER PARTNERS: PANTHERS’S VALUED SPONSORS</h2>
-          <p className="sponsors-description text-center">
-            Pruthvi Panthers proudly supports youth cricket through training camps and development programs — making every sponsor part of our winning journey.
-          </p>
-        </div>
-        
-        {/* Sliding Logo Marquee Container */}
-        <div className="sliding-sponsors-container">
-          <div className="sliding-sponsors-track">
-            {/* Display the full logo list twice for continuous scrolling */}
-            {[...sponsorLogos, ...sponsorLogos].map((logo, index) => (
-              <div key={index} className="sponsor-logo-item">
-                <img src={logo.img} alt={logo.alt} />
-              </div>
-            ))}
-          </div>
         </div>
       </section>
 
+      <AboutSection
+        isVisible={visibleSections.about}
+        registerSection={registerSection}
+        aboutImage1={aboutImage1}
+        aboutImage2={aboutImage2}
+        aboutPoints={aboutPoints}
+      />
+
+      <MediaSection
+        isVisible={visibleSections.media}
+        registerSection={registerSection}
+        mediaImages={mediaImages}
+      />
+
+      <AchievementsSection
+        isVisible={visibleSections.achievements}
+        registerSection={registerSection}
+        achievementImages={achievementImages}
+      />
+
+      <OwnersSection
+        isVisible={visibleSections.owners}
+        registerSection={registerSection}
+        owners={owners}
+      />
+
+      <SponsorsBenefitsSection
+        isVisible={visibleSections.benefits}
+        registerSection={registerSection}
+        benefitCards={benefitCards}
+      />
+
+      <section
+        className={`sponsor-strip reveal-section ${visibleSections.brand ? 'is-visible' : ''}`}
+        ref={registerSection('brand')}
+        data-section="brand"
+      >
+        <div className="content-shell sponsor-strip-inner">
+          <div className="sponsor-copy">
+            <span className="ghost-word">SPONSORS</span>
+            <h2>POWER PARTNERS: PANTHERS'S VALUED SPONSORS</h2>
+            <p>Pruthvi Panthers proudly supports youth cricket through training camps and development programs - making every sponsor part of our winning journey.</p>
+          </div>
+          <div className="sponsor-marquee">
+            <div className="sponsor-marquee-track">
+              {sponsorLoop.map((logo, index) => (
+              <div className="sponsor-logo" key={`sponsor-${logo.id}-${index}`}>
+                <img src={logo.img} alt={logo.alt} />
+              </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

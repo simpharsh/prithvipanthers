@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './footer.css';
 import logo from '../assets/common/logo.png'; // Reusing your existing logo path
 
@@ -37,11 +38,11 @@ const Footer = () => {
             <span className="red-dot"></span> QUICK LINKS
           </h3>
           <ul className="footer-links">
-            <li><a href="/">HOME</a></li>
-            <li><a href="/about">ABOUT</a></li>
-            <li><a href="/player">PLAYER</a></li>
-            <li><a href="/contact">CONTACT</a></li>
-            <li><a href="/gallery">GALLERY</a></li>
+            <li><Link to="/">HOME</Link></li>
+            <li><Link to="/about">ABOUT</Link></li>
+            <li><Link to="/player">PLAYER</Link></li>
+            <li><Link to="/contact">CONTACT</Link></li>
+            <li><Link to="/gallery">GALLERY</Link></li>
           </ul>
         </div>
 

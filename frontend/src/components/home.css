@@ -1,381 +1,196 @@
-/* src/components/Home.css (Fully Updated) */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
 
-/* ================= GLOBAL HOME STYLES ================= */
-.home-page {
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #ffffff;
+:root {
+  --brand: #f45a46;
+  --ink: #1b1b1d;
+  --muted: #6f7277;
+  --line: #ececec;
+  --soft: #f7f7f7;
 }
 
-/* ================= HERO SLIDER STYLES ================= */
-.hero-slider-container {
-  position: relative;
-  width: 100%;
-  height: 98vh; 
-  min-height: 700px;
-  overflow: hidden;
-}
-
-.slide {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 80vh; 
-  background-size: cover;
-  background-position: center;
-  opacity: 0;
-  transition: opacity 1s ease-in-out;
-  z-index: 1;
-}
-
-.slide.active { opacity: 1; z-index: 2; }
-
-.slide-overlay {
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
-
-.slide-content h1 {
-  font-size: 65px;
-  color: #ffffff;
-  margin: 0;
-  text-transform: uppercase;
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  letter-spacing: 2px;
-}
-
-.slide-content p {
-  font-size: 20px;
-  color: #ffffff;
-  margin-top: 15px;
-  margin-bottom: 40px;
-}
-
-.slider-buttons { display: flex; gap: 20px; }
-
-.btn {
-  padding: 12px 30px;
-  font-size: 14px;
-  font-weight: 800;
-  border-radius: 6px;
-  cursor: pointer;
-  text-transform: uppercase;
-  border: none;
-  transition: all 0.3s ease;
-}
-
-.discover-btn { background-color: #f05244; color: #ffffff; }
-.discover-btn:hover { background-color: #d84538; }
-
-.contact-btn { background-color: #ffffff; color: #000000; }
-.contact-btn:hover { background-color: #e0e0e0; }
-
-.slider-dots {
-  position: absolute;
-  bottom: 12vh; 
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  z-index: 3;
-}
-
-.dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.5);
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.active-dot { background-color: #ffffff; width: 24px; border-radius: 6px; }
-
-.statistics-counter-section {
-  position: absolute; 
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 18vh; 
-  display: flex;
-  justify-content: space-evenly; 
-  align-items: center;
-  background-color: #ffffff;
-  z-index: 3; 
-  border-top: 1px solid #eaeaea; 
-  padding: 20px 0;
-}
-
-.statistic-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  width: 20%; 
-}
-
-.stat-number {
-  font-size: 55px; 
-  font-weight: 800;
-  color: #f05244; 
-  font-family: 'Impact', 'Arial Black', sans-serif; 
-  line-height: 1;
-}
-
-.stat-description {
-  font-size: 11px; 
-  font-weight: 700;
-  color: #555555; 
-  text-transform: uppercase;
-  margin-top: 5px; 
-  letter-spacing: 0.5px;
-  line-height: 1.3;
-}
-
-/* ================= HOME CONTENT STYLES ================= */
-.home-content-container { padding: 60px 10%; }
-
-.section-title {
-  font-family: 'Impact', 'Arial Black', sans-serif;
-  font-size: 28px;
-  color: #1a1a1a;
-  letter-spacing: 1px;
-  margin-bottom: 25px;
-  text-transform: uppercase;
-}
-
-.text-center { text-align: center; }
-
-.media-section, .achievements-section, .owners-section, .sponsors-benefits-section { margin-bottom: 70px; }
-
-/* Media Grid */
-.media-grid { display: flex; gap: 15px; height: 450px; }
-.media-large { flex: 0 0 35%; }
-.media-large img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-.media-small-grid {
-  flex: 1; 
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-  gap: 15px;
-}
-.media-small-grid img { width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }
-
-.read-more-link { text-align: right; margin-top: 15px; }
-.read-more-link a { color: #888; text-decoration: none; font-size: 14px; font-style: italic; transition: color 0.3s; }
-.read-more-link a:hover { color: #f05244; }
-
-/* Achievements Stack */
-.achievements-stack { display: flex; justify-content: center; padding: 20px 0; }
-.achievement-card {
-  width: 260px;
-  height: 380px; 
-  margin-left: -60px; 
-  border-radius: 15px;
-  box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.3s ease, z-index 0s;
-  position: relative;
-  cursor: pointer;
-  background-color: #fff;
-  overflow: hidden;
-}
-.achievement-card:first-child { margin-left: 0; }
-.achievement-card:nth-child(1) { z-index: 4; }
-.achievement-card:nth-child(2) { z-index: 3; }
-.achievement-card:nth-child(3) { z-index: 2; }
-.achievement-card:nth-child(4) { z-index: 1; }
-.achievement-card:hover {
-  transform: translateY(-15px) scale(1.05);
-  z-index: 10 !important;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-}
-.achievement-card img { width: 100%; height: 100%; object-fit: cover; }
-
-/* Owners Grid */
-.owners-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 25px; }
-.owner-card {
-  background: #fdfdfd;
-  border: 1px solid #eaeaea;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-  text-align: center;
-  transition: transform 0.3s ease;
-}
-.owner-card:hover { transform: translateY(-5px); }
-.owner-image { height: 220px; width: 100%; }
-.owner-image img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
-.owner-info { padding: 20px 15px; }
-.owner-info h3 { margin: 0; font-size: 18px; font-weight: 800; letter-spacing: 0.5px; color: #1a1a1a; }
-.owner-role {
-  display: inline-block;
-  font-size: 11px;
-  font-weight: 700;
-  color: #1a1a1a;
-  border: 1px solid #ccc;
-  padding: 4px 12px;
-  border-radius: 20px;
-  margin: 12px 0;
-}
-.owner-desc { font-size: 12px; color: #666; line-height: 1.5; margin: 0; }
-
-/* ================= NEW SPONSORS BENEFITS STYLES (from image_6.png) ================= */
-.benefits-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns based on image */
-  gap: 20px;
-}
-
-.benefit-card {
-  background: #fff;
-  border: 1px solid #eaeaea;
-  border-radius: 15px;
-  padding: 30px;
-  position: relative; /* for absolute elements like border & plus icon */
-  display: flex;
-  align-items: center;
-  gap: 25px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-  transition: transform 0.3s, box-shadow 0.3s;
-  overflow: hidden; /* Clips the top border gradient */
-}
-
-.benefit-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-}
-
-/* Thin gradient line at the top of the card */
-.card-top-border {
-  position: absolute;
-  top: 0;
-  left: 20px; /* Slight offset from the side */
-  width: 80%; /* Takes up most of the width */
-  height: 2px;
-  background: linear-gradient(90deg, #f05244 0%, rgba(240, 82, 68, 0) 100%);
-}
-
-.number-circle {
-  width: 60px;
-  height: 60px;
-  background-color: #f7e6e3; /* Light reddish background */
-  color: #f05244; /* Brand Orange-Red */
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Impact', sans-serif;
-  font-size: 30px;
-  font-weight: 900;
-  flex-shrink: 0; /* Prevents number from squishing */
-}
-
-.benefit-content { flex: 1; }
-
-.benefit-text {
-  font-size: 13px;
-  color: #1a1a1a;
-  font-weight: 600;
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* Gray '+' icon in the bottom right corner */
-.plus-icon {
-  position: absolute;
-  bottom: 20px;
-  right: 20px;
-  font-size: 18px;
-  color: #ccc;
-  font-weight: 300;
-}
-
-/* ================= NEW SLIDING SPONSORS STYLES ================= */
-.valued-sponsors-section {
-  background-color: #fafafa;
-  padding: 80px 10%;
-  position: relative; /* for background text positioning */
-  overflow: hidden; /* clips the sliding logos track */
-}
-
-/* Large, faint, background-positioned text */
-.background-sponsors-title {
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-family: 'Impact', sans-serif;
-  font-size: 200px;
-  font-weight: 900;
-  color: rgba(0,0,0,0.02); /* Extremely faint */
-  letter-spacing: 15px;
-  margin: 0;
-  z-index: 1;
-}
-
-.power-partners-info {
-  position: relative; /* places info above background text */
-  z-index: 2;
-  margin-bottom: 50px;
-}
-
-.sponsors-description {
-  color: #777;
-  font-size: 14px;
-  line-height: 1.6;
-  max-width: 600px;
-  margin: 0 auto; /* Centers the block */
-}
-
-/* --- Sliding Marquee Layout --- */
-.sliding-sponsors-container {
-  width: 100%;
-  position: relative;
-  z-index: 2; /* places logos above background text */
-  margin-top: 20px;
-}
-
-.sliding-sponsors-track {
-  display: flex;
-  width: calc(250px * 16); /* Total logos (8*2) * individual width */
-  animation: slideMarquee 40s linear infinite; /* Smooth continuous scroll */
-}
-
-/* Pause animation on hover */
-.sliding-sponsors-track:hover {
-  animation-play-state: paused;
-}
-
-.sponsor-logo-item {
-  width: 250px; /* Base width per logo item */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 20px; /* Space between logos */
+* {
   box-sizing: border-box;
 }
 
-.sponsor-logo-item img {
+.home-page {
+  background: #fff;
+  color: var(--ink);
+}
+
+/* --- STATS SECTION --- */
+.stats-section {
+  border-bottom: 1px solid var(--line);
+  background: #fff;
+}
+
+.stats-grid {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  padding: 40px 0;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 14px 8px;
+}
+
+.stat-value {
+  display: block;
+  color: var(--brand);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(45px, 5vw, 65px);
+  line-height: 1;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 10px;
+  color: #6e7177;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.4;
+}
+
+.content-shell {
+  width: min(1180px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 70px 0;
+}
+
+.section-heading {
+  margin: 0 0 30px;
+  color: var(--ink);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(32px, 3.5vw, 42px);
+  line-height: 1;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* --- SPONSOR HORIZONTAL MARQUEE --- */
+.sponsor-strip {
+  background: #fafafa;
+  padding: 80px 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.sponsor-copy {
+  text-align: center;
+  margin-bottom: 50px;
+  position: relative;
+  z-index: 2;
+}
+
+.ghost-word {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(0, 0, 0, 0.02);
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(100px, 15vw, 220px);
+  line-height: 1;
+  letter-spacing: 15px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sponsor-copy h2 {
+  margin: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 3.1vw, 40px);
+  text-transform: uppercase;
+}
+
+.sponsor-copy p {
+  max-width: 600px;
+  margin: 14px auto 0;
+  color: #777a7f;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.sponsor-marquee {
+  width: 50%;
+  margin: 0 auto;
+  align-self: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.sponsor-marquee-track {
+  display: flex;
+  flex-wrap: nowrap;
+  width: max-content;
+  animation: logoMarquee 30s linear infinite;
+  align-items: center;
+}
+
+.sponsor-logo {
+  flex: 0 0 auto;
+  width: 110px;
+  padding: 0 6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.sponsor-logo img {
   max-width: 100%;
-  max-height: 70px; /* Maximum height to keep marquee uniform */
+  max-height: 50px;
   object-fit: contain;
-  opacity: 0.7; /* Optional: adds subtle blend effect */
+  opacity: 0.7;
   transition: opacity 0.3s;
 }
 
-.sponsor-logo-item:hover img {
+.sponsor-logo img:hover {
   opacity: 1;
 }
 
-/* Keyframes Animation for continuous sliding */
-@keyframes slideMarquee {
-  0% { transform: translateX(0); }
-  /* Translate X by exactly half the total track width (since we double the logo list) */
-  100% { transform: translateX(calc(-250px * 8)); }
+@keyframes logoMarquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
 }
+
+/* Animations */
+.reveal-section {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal-section.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 1100px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .content-shell,
+  .stats-grid {
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}
+

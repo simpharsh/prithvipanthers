@@ -1,26 +1,29 @@
 /* src/components/About.css (Completely Rewritten for precise match) */
 
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
 .about-page {
-  /* Using a combination of widely-available modern sans-serif fonts to match the design's clean, robust feel */
-  font-family: 'Poppins', 'Inter', 'Segoe UI', 'Roboto', Helvetica, Arial, sans-serif;
-  background-color: #ffffff;
-  padding: 80px 10%; /* Increased top/bottom padding for cleaner spacing */
+  font-family: 'Bebas Neue', sans-serif;
+  background-color: #efefef;
+  padding: 70px 0;
   color: #1a1a1a;
 }
 
 /* ================= INTRO SECTION ================= */
 .about-intro-section {
+  width: min(1180px, calc(100% - 64px));
+  margin: 0 auto 90px;
   display: flex;
-  gap: 70px; /* Increased gap for cleanliness */
+  gap: 36px;
   align-items: flex-start;
-  margin-bottom: 90px;
+  background: #efefef;
 }
 
 .about-intro-images {
-  flex: 0 0 40%; /* Fixed width for image column */
+  flex: 0 0 46%;
   display: flex;
-  flex-direction: column; /* Images stack vertically */
-  gap: 20px;
+  flex-direction: column;
+  gap: 16px;
 }
 
 /* Base style for both images */
@@ -28,69 +31,69 @@
   width: 100%;
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.06); /* Refined, subtle shadow */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
 }
 
-/* Specific aspect ratio adjustment if needed from image 9/10 */
 .intro-img-top {
-  height: auto;
+  height: 322px;
 }
 .intro-img-bottom {
-  height: auto;
+  height: 322px;
 }
 
 .about-intro-content {
   flex: 1;
+  max-width: 660px;
 }
 
 .about-title {
-  /* This large title needs a slightly bolder, slightly squashed look. 
-     Using a separate stack to emulate that weight. */
-  font-family: 'Impact', 'Arial Black', sans-serif; 
-  font-size: 38px;
-  font-weight: 900;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 50px;
   text-transform: uppercase;
   margin-top: 0;
-  margin-bottom: 30px;
-  letter-spacing: 0.5px;
-  line-height: 1.1;
-  color: #1a1a1a;
+  margin-bottom: 34px;
+  letter-spacing: 1.8px;
+  line-height: 1.05;
+  color: #2c313b;
 }
 
 .about-intro-content p {
-  font-size: 14px;
-  line-height: 1.8; /* Increased line-height for better readability */
-  color: #555555; /* Slightly lighter gray for descriptions */
-  margin-bottom: 18px;
+  font-size: 15px;
+  line-height: 1.72;
+  color: #808590;
+  margin-bottom: 22px;
+  letter-spacing: 0.1px;
 }
 
 .highlight-text {
-  font-weight: 700;
-  color: #1a1a1a !important; /* Forces bold color back to near-black */
-  margin-bottom: 35px !important;
+  color: #808590 !important;
+  margin-bottom: 34px !important;
 }
 
 .know-more-btn {
-  /* Matching the exact style of the Navbar/Contact Us button */
-  background-color: #f05244;
+  background-color: #f2552c;
   color: #ffffff;
   border: none;
-  border-radius: 6px;
-  padding: 12px 30px;
+  border-radius: 12px;
+  padding: 14px 30px;
+  min-width: 152px;
   font-size: 15px;
-  font-weight: 700;
-  text-transform: uppercase; /* Ensure text is uppercase */
+  text-transform: none;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out, transform 0.2s ease;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 6px 14px rgba(242, 85, 44, 0.28);
 }
 
 .know-more-btn:hover {
-  background-color: #d84538;
-  transform: translateY(-2px); /* Subtle lift on hover */
+  background-color: #e44c25;
+  transform: translateY(-2px);
 }
 
 /* ================= OWNERS SECTION ================= */
 .about-owners-section {
+  width: min(1180px, calc(100% - 64px));
+  margin-left: auto;
+  margin-right: auto;
   margin-top: 60px;
 }
 
@@ -100,16 +103,17 @@
 }
 
 .owners-header h2 {
-  font-family: 'Impact', sans-serif; /* Strong matching heading font */
-  font-size: 36px;
-  font-weight: 800;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 40px;
+  letter-spacing: 1px;
   margin-bottom: 10px;
   color: #1a1a1a;
 }
 
 .owners-header p {
   color: #666666;
-  font-size: 15px;
+  font-size: 18px;
+  letter-spacing: 1px;
 }
 
 .owners-list {
@@ -161,26 +165,76 @@
 }
 
 .owner-detail-info h3 {
-  /* Large, bold font for owner names */
   font-size: 28px;
-  font-weight: 800;
   margin: 0 0 8px 0;
   color: #1a1a1a;
-  letter-spacing: -0.5px;
+  letter-spacing: 1px;
 }
 
 .owner-detail-info h4 {
-  /* Subtitle text is smaller and darker gray */
   font-size: 14px;
-  font-weight: 700;
   color: #333333;
   margin: 0 0 20px 0;
-  letter-spacing: 0.3px;
+  letter-spacing: 1px;
 }
 
 .owner-detail-info p {
   font-size: 13px;
   color: #555555;
-  line-height: 1.8; /* High readability line-height */
+  line-height: 1.8;
   margin: 0;
+}
+
+@media (max-width: 768px) {
+  .about-page {
+    padding: 36px 0;
+  }
+
+  .about-intro-section,
+  .about-owners-section {
+    width: min(100%, calc(100% - 28px));
+  }
+
+  .about-intro-content {
+    max-width: 100%;
+  }
+
+  .about-intro-section {
+    display: block;
+  }
+
+  .about-intro-images {
+    margin-bottom: 18px;
+    gap: 12px;
+  }
+
+  .intro-img-top,
+  .intro-img-bottom {
+    height: auto;
+  }
+
+  .about-title {
+    font-size: clamp(36px, 11vw, 48px);
+    margin-bottom: 24px;
+  }
+
+  .about-intro-content p {
+    font-size: 13px;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  .know-more-btn {
+    font-size: 14px;
+    border-radius: 10px;
+    padding: 12px 24px;
+  }
+
+  .owner-detail-card,
+  .owner-detail-card.reverse {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 24px;
+    padding: 28px;
+  }
 }

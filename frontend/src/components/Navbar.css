@@ -1,39 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&display=swap');
+
 /* Container styling */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 50px;
+  padding: 11px 5%; 
   background-color: #ffffff;
-  border-bottom: 1px solid #eaeaea; /* Optional: adds a subtle line under the navbar */
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  border-bottom: 1px solid #eaeaea; 
+  font-family: 'Poppins', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 /* Left side: Logo and Brand Name */
 .navbar-left {
   display: flex;
   align-items: center;
-  gap: 15px; /* Space between logo and text */
+  gap: 15px; 
 }
 
 .logo {
-  height: 55px; /* Adjust this to match the exact size you need */
+  height: 50px; /* Slightly larger to match the image proportion */
   width: auto;
 }
 
 .brand-name {
-  font-size: 22px;
-  font-weight: 800;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 400;
   color: #1a1a1a;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  margin-top: 4px;
 }
 
 /* Right side: Links and Button */
 .navbar-right {
   display: flex;
   align-items: center;
-  gap: 40px; /* Space between the links menu and the button */
+  gap: 50px; /* Wider gap between the menu links and the button */
 }
 
 .nav-links {
@@ -41,38 +46,44 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  gap: 30px; /* Space between each link */
+  gap: 35px; /* Wider, cleaner spacing between each link */
 }
 
 .nav-links li a {
   text-decoration: none;
-  color: #000000;
-  font-weight: 600;
+  font-family: 'bebas neue', sans-serif;
+  color: #1a1a1a; 
   font-size: 15px;
-  padding-bottom: 4px;
+  padding-bottom: 8px; 
   transition: all 0.2s ease-in-out;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* Hover and Active states for links */
 .nav-links li a:hover,
 .nav-links li a.active {
-  color: #f05244; /* The specific red from your design */
+  color: #f05244; 
   border-bottom: 2px solid #f05244;
 }
 
 /* Contact Us Button */
 .contact-btn {
+  display: inline-block;
   background-color: #f05244;
   color: #ffffff;
   border: none;
-  border-radius: 6px;
-  padding: 10px 24px;
-  font-size: 15px;
+  border-radius: 8px; /* Softer border radius matching the image */
+  padding: 12px 28px; /* Thicker, more substantial button padding */
+  font-size: 14px;
   font-weight: 700;
+  letter-spacing: 0.5px;
+  text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
+  transition: background-color 0.2s ease-in-out, transform 0.2s ease;
 }
 
 .contact-btn:hover {
-  background-color: #d84538; /* Slightly darker red for hover effect */
+  background-color: #d84538; 
+  transform: translateY(-2px); /* Subtle hover lift effect */
 }

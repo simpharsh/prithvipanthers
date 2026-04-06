@@ -2,7 +2,7 @@
 .footer-container {
   background-color: #22262f; /* Dark slate background matching the design */
   color: #cccccc; /* Light grey text */
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
   padding-top: 60px;
 }
 
@@ -38,9 +38,8 @@
 
 .footer-brand-name {
   font-size: 22px;
-  font-weight: 800;
   color: #ffffff;
-  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-family: 'Bebas Neue', sans-serif;
   letter-spacing: 1px;
 }
 
@@ -78,13 +77,13 @@
 /* Headings for Col 2 & 3 */
 .footer-heading {
   color: #ffffff;
-  font-size: 18px;
-  font-weight: 600;
+  font-family: 'bebas neue', sans-serif;
+  font-size: 20px;
   margin-bottom: 25px;
   display: flex;
   align-items: center;
   gap: 10px;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
 }
 
 .red-dot {

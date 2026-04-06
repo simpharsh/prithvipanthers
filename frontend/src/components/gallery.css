@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+.gallery-page {
+  min-height: 100vh;
+  background-color: #fff;
+}
+
+.gallery-hero {
+  padding: 70px 16px 50px;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(140deg, #121927 0%, #1f2f52 45%, #f05244 160%);
+}
+
+.gallery-hero h1 {
+  margin: 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-weight: 400;
+  letter-spacing: 1px;
+  font-size: clamp(38px, 6vw, 66px);
+}
+
+.gallery-hero p {
+  margin: 12px auto 0;
+  max-width: 680px;
+  font-family: 'Bebas Neue', sans-serif;
+}
+
+.gallery-grid-section {
+  width: min(1220px, 92%);
+  margin: 34px auto 70px;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.gallery-item {
+  margin: 0;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 12px 26px rgba(10, 18, 30, 0.14);
+  background-color: #f3f5f8;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  min-height: 230px;
+  max-height: 340px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.35s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.04);
+}
+

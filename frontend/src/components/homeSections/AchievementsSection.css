@@ -1,0 +1,78 @@
+/* --- ACHIEVEMENTS STACK CARDS --- */
+.achievement-stack {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px 0 0 0;
+}
+
+.ach-card {
+  width: 260px;
+  height: 320px;
+  border-radius: 16px;
+  box-shadow: -5px 0 20px rgba(0, 0, 0, 0.15);
+  object-fit: contain;
+  object-position: center;
+  margin-left: -70px;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), margin 0.4s cubic-bezier(0.25, 1, 0.5, 1), z-index 0s;
+  background: #fff;
+}
+
+.ach-card:first-child {
+  margin-left: 0;
+}
+
+.ach-card:nth-child(1) {
+  z-index: 4;
+}
+
+.ach-card:nth-child(2) {
+  z-index: 3;
+}
+
+.ach-card:nth-child(3) {
+  z-index: 2;
+}
+
+.ach-card:nth-child(4) {
+  z-index: 1;
+}
+
+.ach-card:hover {
+  transform: translateY(-30px) scale(1.05);
+  z-index: 10 !important;
+  margin-right: 40px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+}
+
+.ach-card:hover ~ .ach-card {
+  transform: translateX(40px);
+}
+
+@media (max-width: 768px) {
+  .achievement-stack {
+    flex-direction: column;
+    padding-left: 20px;
+  }
+
+  .ach-card {
+    margin-left: 0;
+    margin-top: -50px;
+  }
+
+  .ach-card:first-child {
+    margin-top: 0;
+  }
+
+  .ach-card:hover {
+    transform: translateX(20px);
+    margin-right: 0;
+  }
+
+  .ach-card:hover ~ .ach-card {
+    transform: translateY(30px);
+  }
+}
+
