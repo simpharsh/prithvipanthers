@@ -41,3 +41,5 @@ Thumbs.db
 .planning/
 frontend/.git_frontend_backup/
 backend/public/uploads
+frontend/assets/gallary
+frontend/assets/players
