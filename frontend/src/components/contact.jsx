@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './contact.css';
 
 const initialState = {
@@ -9,8 +9,15 @@ const initialState = {
 
 const Contact = () => {
   const [formData, setFormData] = useState(initialState);
-  const [isHumanChecked, setIsHumanChecked] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/track-view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: 'contact' })
+    }).catch(() => {});
+  }, []);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -21,10 +28,6 @@ const Contact = () => {
     event.preventDefault();
     setStatus({ type: '', message: '' });
 
-    if (!isHumanChecked) {
-      setStatus({ type: 'error', message: 'Please confirm you are not a robot.' });
-      return;
-    }
 
     try {
       const response = await fetch('http://localhost:5000/api/contact', {
@@ -41,7 +44,6 @@ const Contact = () => {
 
       setStatus({ type: 'success', message: 'Message sent successfully. We will contact you soon.' });
       setFormData(initialState);
-      setIsHumanChecked(false);
     } catch (error) {
       setStatus({ type: 'error', message: error.message || 'Something went wrong. Please try again.' });
     }
@@ -68,16 +70,6 @@ const Contact = () => {
 
               <label htmlFor="message">Your Message *</label>
               <textarea id="message" name="message" placeholder="Your Message" value={formData.message} onChange={handleChange} rows="4" required />
-
-              <label className="contact-captcha" htmlFor="not-robot">
-                <input
-                  id="not-robot"
-                  type="checkbox"
-                  checked={isHumanChecked}
-                  onChange={(event) => setIsHumanChecked(event.target.checked)}
-                />
-                <span>I am not a robot</span>
-              </label>
 
               <button type="submit">SEND MESSAGE</button>
 

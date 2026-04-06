@@ -68,6 +68,14 @@ const Home = () => {
   const [visibleSections, setVisibleSections] = useState({ hero: true });
   const sectionRefs = useRef({});
 
+  useEffect(() => {
+    fetch('http://localhost:5000/api/track-view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: 'home' })
+    }).catch(() => {});
+  }, []);
+
   const registerSection = (sectionKey) => (element) => {
     if (element) {
       sectionRefs.current[sectionKey] = element;

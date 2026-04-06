@@ -1,44 +1,29 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import './player.css';
 
-const imageContext = require.context('../assets/players', false, /\.(png|jpe?g)$/);
-
-const players = [
-  { name: 'Abhishek Patel', role: 'Bowlers', cover: 'abhishek-cover.jpeg', photo: 'abhishek.jpeg' },
-  { name: 'Amsh Prajapati', role: 'All-Rounders', cover: 'amsh-cover.jpeg', photo: 'ansh.jpeg' },
-  { name: 'Arjun Solanki', role: 'Batters', cover: 'arjun-cover.jpeg', photo: 'arjun.jpeg' },
-  { name: 'Ashutosh Rana', role: 'Bowlers', cover: 'ashutosh-cover.jpeg', photo: 'ashutosh.jpeg' },
-  { name: 'Ayush Thakor', role: 'Batters', cover: 'ayush-cover.jpeg', photo: 'ayush.jpeg' },
-  { name: 'Bhargav Desai', role: 'Bowlers', cover: 'bhargav-cover.jpeg', photo: 'bhargav.jpeg' },
-  { name: 'Chirag Parmar', role: 'All-Rounders', cover: 'chirag-cover.jpeg', photo: 'chirag.jpeg' },
-  { name: 'Dhairya Shah', role: 'Wicket Keepers', cover: 'dhairya-cover.jpeg', photo: 'dhairya.jpeg' },
-  { name: 'Dhruv Barot', role: 'Bowlers', cover: 'dhruv-b-cover.jpeg', photo: 'dhruv-b.jpeg' },
-  { name: 'Dhruv Gajjar', role: 'Wicket Keepers', cover: 'dhruv-g-cover.jpeg', photo: 'dhruv-g.jpeg' },
-  { name: 'Jay Chauhan', role: 'All-Rounders', cover: 'jay-cover.jpeg', photo: 'jay.jpeg' },
-  { name: 'Lakshyajit Singh', role: 'Batters', cover: 'lakshyajit-cover.jpeg', photo: 'lakshyajit.jpeg' },
-  { name: 'Mohit Parmar', role: 'All-Rounders', cover: 'mohit-cover.jpeg', photo: 'mohit.jpeg' },
-  { name: 'Pradip Rana', role: 'All-Rounders', cover: 'pradip-cover.jpeg', photo: 'pradip.jpeg' },
-  { name: 'Priyanshu Solanki', role: 'Batters', cover: 'priyanshu-cover.jpeg', photo: 'priyanshu.jpeg' },
-  { name: 'Raj Patel', role: 'Bowlers', cover: 'raj-cover.jpg', photo: 'raj.jpeg' },
-  { name: 'Rajvir Singh', role: 'Batters', cover: 'rajvir-cover.jpeg', photo: 'rajvir.jpeg' },
-  { name: 'Shehbaj Khan', role: 'Batters', cover: 'shehbaj-cover.jpeg', photo: 'shehbaj.jpeg' },
-  { name: 'Shivendra Singh', role: 'Bowlers', cover: 'shivendra-cover.jpeg', photo: 'shivendra.jpeg' },
-  { name: 'Utsavraj Jadeja', role: 'All-Rounders', cover: 'utsavraj-cover.jpeg', photo: 'utsavraj.jpeg' },
-  { name: 'Vishv Patel', role: 'Wicket Keepers', cover: 'vishv-cover.jpeg', photo: 'vishv.jpeg' },
-  { name: 'Vishvas Trivedi', role: 'Batters', cover: 'vishvas-cover.jpeg', photo: 'vishvas.jpeg' },
-  { name: 'Vivaan Shah', role: 'All-Rounders', cover: 'vivaan-cover.jpeg', photo: 'vivaan.jpeg' },
-  { name: 'Yugandra Singh', role: 'Bowlers', cover: 'yugandra-cover.jpeg', photo: 'yugandra.jpeg' }
-];
-
-const getImg = (fileName) => imageContext(`./${fileName}`);
 const roleTabs = ['All', 'Batters', 'All-Rounders', 'Bowlers', 'Wicket Keepers'];
 
 const Player = () => {
+  const [players, setPlayers] = useState([]);
   const [activeTab, setActiveTab] = useState('All');
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/players')
+      .then(res => res.json())
+      .then(data => setPlayers(data))
+      .catch(console.error);
+    
+    // View Tracker
+    fetch('http://localhost:5000/api/track-view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: 'player' })
+    }).catch(() => {});
+  }, []);
 
   const visiblePlayers = useMemo(
     () => (activeTab === 'All' ? players : players.filter((player) => player.role === activeTab)),
-    [activeTab]
+    [activeTab, players]
   );
 
   const playersByRole = useMemo(() => {
@@ -74,9 +59,9 @@ const Player = () => {
             <h2>{group.role}</h2>
             <div className="players-grid">
               {group.list.map((player) => (
-                <article className="player-card" key={player.name}>
-                  <img className="card-image cover" src={getImg(player.cover)} alt={`${player.name} cover`} />
-                  <img className="card-image photo" src={getImg(player.photo)} alt={player.name} />
+                <article className="player-card" key={player.id}>
+                  <img className="card-image cover" src={`http://localhost:5000${player.cover_image_url}`} alt={`${player.name} cover`} />
+                  <img className="card-image photo" src={`http://localhost:5000${player.photo_image_url}`} alt={player.name} />
                   <div className="player-name">{player.name}</div>
                 </article>
               ))}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
 // Import all your components
 import Navbar from './components/Navbar';
@@ -11,28 +11,48 @@ import Contact from './components/contact';
 import Footer from './components/footer';
 import ScrollToTop from './components/scrolltotop';
 
+import AdminLogin from './components/Admin/AdminLogin';
+import AdminDashboard from './components/Admin/AdminDashboard';
+import Preloader from './components/Preloader';
+
+function AppContent() {
+  const location = useLocation();
+  const isAdmin = location.pathname.startsWith('/admin');
+
+  return (
+    <div className="app-container">
+      <Preloader />
+      {/* These components sit OUTSIDE the Routes so they show on every page, except admin */}
+      {!isAdmin && <Navbar />}
+      
+      {/* This is the dynamic area that changes based on the URL */}
+      <div className={isAdmin ? "" : "main-content"}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/player" element={<Player />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/admin" element={<AdminLogin />} />
+          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        </Routes>
+      </div>
+      
+      {/* Footer and Scroll sit at the bottom of every page, except admin */}
+      {!isAdmin && (
+        <>
+          <Footer />
+          <ScrollToTop />
+        </>
+      )}
+    </div>
+  );
+}
+
 function App() {
   return (
     <Router>
-      <div className="app-container">
-        {/* These components sit OUTSIDE the Routes so they show on every page */}
-        <Navbar />
-        
-        {/* This is the dynamic area that changes based on the URL */}
-        <div className="main-content">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/player" element={<Player />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </div>
-        
-        {/* Footer and Scroll sit at the bottom of every page */}
-        <Footer />
-        <ScrollToTop />
-      </div>
+      <AppContent />
     </Router>
   );
 }

@@ -87,3 +87,71 @@
   background-color: #d84538; 
   transform: translateY(-2px); /* Subtle hover lift effect */
 }
+
+/* Mobile Menu Icon */
+.menu-icon {
+  display: none;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  padding: 5px;
+}
+
+.menu-icon svg {
+  width: 28px;
+  height: 28px;
+  fill: #1a1a1a;
+}
+
+/* Mobile Responsive */
+@media (max-width: 900px) {
+  .navbar {
+    padding: 11px 20px;
+  }
+  
+  .navbar-right {
+    gap: 20px;
+  }
+  
+  .nav-links {
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .menu-icon {
+    display: block;
+    z-index: 1000;
+  }
+
+  .nav-links {
+    position: fixed;
+    top: 73px;
+    right: -100%;
+    width: 100%;
+    height: calc(100vh - 73px);
+    background-color: #ffffff;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: right 0.3s ease-in-out;
+    gap: 40px;
+    z-index: 999;
+  }
+
+  .nav-links.active {
+    right: 0;
+  }
+
+  .nav-links li a {
+    font-size: 24px;
+  }
+
+  .brand-name {
+    font-size: 20px;
+  }
+
+  .contact-btn {
+    display: none; /* Can optionally be moved inside mobile menu, hiding for now or handle via script */
+  }
+}

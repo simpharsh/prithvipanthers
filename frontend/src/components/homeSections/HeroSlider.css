@@ -1,7 +1,7 @@
 /* --- HERO SLIDER --- */
 .hero-section {
   position: relative;
-  height: 663px;
+  height: 665px;
   min-height: 600px;
   overflow: hidden;
 }
@@ -127,4 +127,3 @@
     min-height: 400px;
   }
 }
-

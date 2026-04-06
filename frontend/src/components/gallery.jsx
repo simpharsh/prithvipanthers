@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './gallery.css';
 
-const imageContext = require.context('../assets/gallary', false, /\.(png|jpe?g)$/);
-const galleryImages = imageContext
-  .keys()
-  .map((filePath) => ({
-    id: Number(filePath.replace('./', '').split('.')[0]),
-    src: imageContext(filePath)
-  }))
-  .sort((a, b) => a.id - b.id);
-
 const Gallery = () => {
+  const [galleryImages, setGalleryImages] = useState([]);
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/gallery')
+      .then(res => res.json())
+      .then(data => setGalleryImages(data))
+      .catch(console.error);
+
+    // View Tracker
+    fetch('http://localhost:5000/api/track-view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: 'gallery' })
+    }).catch(() => {});
+  }, []);
+
   return (
     <div className="gallery-page">
       <section className="gallery-hero">
@@ -22,7 +29,7 @@ const Gallery = () => {
         <div className="gallery-grid">
           {galleryImages.map((item) => (
             <figure className="gallery-item" key={item.id}>
-              <img src={item.src} alt={`Pruthvi Panthers gallery ${item.id}`} loading="lazy" />
+              <img src={`http://localhost:5000${item.image_url}`} alt={`Pruthvi Panthers gallery ${item.id}`} loading="lazy" />
             </figure>
           ))}
         </div>

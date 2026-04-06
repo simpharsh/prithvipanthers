@@ -1,5 +1,5 @@
 // src/components/About.jsx (Revised for precise visual match)
-import React from 'react';
+import React, { useEffect } from 'react';
 import './about.css'; // Standard case-sensitive import
 
 // --- TOP SECTION IMAGES ---
@@ -44,6 +44,14 @@ const About = () => {
       img: girishImg
     }
   ];
+
+  useEffect(() => {
+    fetch('http://localhost:5000/api/track-view', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ page: 'about' })
+    }).catch(() => {});
+  }, []);
 
   return (
     <div className="about-page">

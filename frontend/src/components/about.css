@@ -27,16 +27,18 @@
 }
 
 /* Base style for both images */
-.intro-img-top, .intro-img-bottom {
+.intro-img-top,
+.intro-img-bottom {
   width: 100%;
   border-radius: 12px;
   object-fit: cover;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);
 }
 
 .intro-img-top {
   height: 322px;
 }
+
 .intro-img-bottom {
   height: 322px;
 }
@@ -99,7 +101,8 @@
 
 .owners-header {
   margin-bottom: 50px;
-  text-align: left; /* Left aligned matching design */
+  text-align: left;
+  /* Left aligned matching design */
 }
 
 .owners-header h2 {
@@ -119,7 +122,8 @@
 .owners-list {
   display: flex;
   flex-direction: column;
-  gap: 40px; /* Generous gap between cards */
+  gap: 40px;
+  /* Generous gap between cards */
 }
 
 /* Base Card Styling - Unified for cleaner border/shadow */
@@ -128,25 +132,33 @@
   align-items: center;
   background: #ffffff;
   border: 1px solid #eaeaea;
-  border-radius: 15px; /* Softer corner radius */
-  padding: 40px 50px; /* Generous internal padding */
-  gap: 50px; /* Large gap between image and text */
-  box-shadow: 0 3px 10px rgba(0,0,0,0.03); /* Refined shadow */
+  border-radius: 15px;
+  /* Softer corner radius */
+  padding: 40px 50px;
+  /* Generous internal padding */
+  gap: 50px;
+  /* Large gap between image and text */
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
+  /* Refined shadow */
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .owner-detail-card:hover {
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08); /* Robuster hover shadow */
-  transform: translateY(-5px); /* Gentle float on hover */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  /* Robuster hover shadow */
+  transform: translateY(-5px);
+  /* Gentle float on hover */
 }
 
 /* Logic for alternating layout - clean implementation */
 .owner-detail-card.reverse {
-  flex-direction: row-reverse; /* Flips image to right, text to left */
+  flex-direction: row-reverse;
+  /* Flips image to right, text to left */
 }
 
 .owner-detail-image {
-  flex: 0 0 200px; /* Slightly larger, fixed width for owner images */
+  flex: 0 0 200px;
+  /* Slightly larger, fixed width for owner images */
   height: 200px;
   display: flex;
   align-items: center;
@@ -172,16 +184,17 @@
 }
 
 .owner-detail-info h4 {
-  font-size: 14px;
+  font-size: 15px;
   color: #333333;
   margin: 0 0 20px 0;
   letter-spacing: 1px;
 }
 
 .owner-detail-info p {
-  font-size: 13px;
+  font-size: 14px;
   color: #555555;
   line-height: 1.8;
+  letter-spacing: 0.7px;
   margin: 0;
 }
 

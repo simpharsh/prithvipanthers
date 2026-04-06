@@ -161,3 +161,40 @@
   font-size: 13px;
   color: #888888;
 }
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+    padding: 0 5%;
+    padding-bottom: 30px;
+    gap: 30px;
+  }
+
+  .footer-logo-wrapper {
+    justify-content: center;
+  }
+
+  .footer-description {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .social-icons {
+    justify-content: center;
+  }
+
+  .footer-heading {
+    justify-content: center;
+  }
+
+  .footer-links,
+  .footer-contact-info {
+    text-align: center;
+  }
+
+  .footer-contact-info li {
+    justify-content: center;
+  }
+}
+

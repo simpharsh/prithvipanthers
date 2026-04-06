@@ -1,0 +1,322 @@
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  background-color: #f4f6f8;
+  font-family: 'Inter', 'Poppins', sans-serif;
+}
+
+.admin-sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #121927 0%, #1a2436 100%);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 4px 0 24px rgba(0,0,0,0.06);
+  z-index: 10;
+}
+
+.admin-brand {
+  padding: 35px 25px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 32px;
+  letter-spacing: 1.5px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  color: #f05244;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-brand::before {
+  content: '';
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background-color: #f05244;
+  border-radius: 50%;
+  box-shadow: 0 0 10px rgba(240, 82, 68, 0.8);
+}
+
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  padding: 25px 0;
+  flex: 1;
+  gap: 5px;
+}
+
+.admin-nav button {
+  background: none;
+  border: none;
+  color: #a0aabf;
+  padding: 16px 30px;
+  text-align: left;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-left: 4px solid transparent;
+  font-weight: 500;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-nav button::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(90deg, rgba(240, 82, 68, 0.1) 0%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.3s;
+  z-index: -1;
+}
+
+.admin-nav button:hover {
+  color: white;
+}
+
+.admin-nav button:hover::before {
+  opacity: 1;
+}
+
+.admin-nav button.active {
+  color: #f05244;
+  border-left-color: #f05244;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.admin-nav button.active::before {
+  opacity: 1;
+}
+
+.logout-btn {
+  background: rgba(198, 40, 40, 0.05);
+  border: none;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  color: #ff5252;
+  padding: 24px;
+  cursor: pointer;
+  text-align: left;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.logout-btn:hover {
+  color: white;
+  background: #c62828;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 40px 50px;
+  overflow-y: auto;
+  background: #f4f7f6;
+}
+
+.admin-panel-section h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: #121927;
+  margin-top: 0;
+  margin-bottom: 35px;
+  letter-spacing: 1px;
+}
+
+.admin-card {
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+  margin-bottom: 40px;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.admin-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(0,0,0,0.06);
+}
+
+.admin-card h3 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  color: #121927;
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-card h3::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background: #f05244;
+  border-radius: 4px;
+}
+
+.admin-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.admin-form input,
+.admin-form select {
+  padding: 14px 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 14px;
+  background: #f8fafc;
+  transition: all 0.2s;
+  color: #334155;
+  outline: none;
+}
+
+.admin-form input:focus,
+.admin-form select:focus {
+  border-color: #f05244;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(240, 82, 68, 0.1);
+}
+
+.admin-form label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 6px;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #f05244 0%, #d32f2f 100%);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(240, 82, 68, 0.3);
+}
+
+.save-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(240, 82, 68, 0.4);
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #334155;
+}
+
+.admin-table tbody tr {
+  transition: background 0.2s;
+}
+
+.admin-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.admin-table th {
+  background: #f8fafc;
+  color: #64748b;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.admin-table th:first-child { border-top-left-radius: 8px; }
+.admin-table th:last-child { border-top-right-radius: 8px; }
+
+.del-btn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.del-btn:hover {
+  background: #ef4444;
+  color: white;
+  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.admin-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 25px;
+}
+
+.admin-gallery-item {
+  background: white;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+  border: 1px solid rgba(0,0,0,0.03);
+  transition: transform 0.3s;
+}
+
+.admin-gallery-item:hover {
+  transform: translateY(-5px);
+}
+
+.admin-gallery-item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.block-btn {
+  display: block;
+  width: 100%;
+}
+
+.admin-status {
+  padding: 12px 16px;
+  background: #ecfdf5;
+  color: #10b981;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid #d1fae5;
+  animation: fadein 0.3s;
+}
+
+@keyframes fadein {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Page transitions */
+.fade-in {
+  animation: fadeInContent 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes fadeInContent {
+  0% { opacity: 0; transform: translateY(15px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
