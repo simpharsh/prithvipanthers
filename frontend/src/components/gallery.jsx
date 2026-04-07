@@ -3,6 +3,7 @@ import './gallery.css';
 
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState([]);
+  const tilePattern = ['tile-xl', 'tile-tall', 'tile-wide', 'tile-small', 'tile-wide', 'tile-small', 'tile-tall', 'tile-xl'];
 
   useEffect(() => {
     fetch('http://localhost:5000/api/gallery')
@@ -27,8 +28,8 @@ const Gallery = () => {
 
       <section className="gallery-grid-section">
         <div className="gallery-grid">
-          {galleryImages.map((item) => (
-            <figure className="gallery-item" key={item.id}>
+          {galleryImages.map((item, index) => (
+            <figure className={`gallery-item ${tilePattern[index % tilePattern.length]}`} key={item.id}>
               <img src={`http://localhost:5000${item.image_url}`} alt={`Pruthvi Panthers gallery ${item.id}`} loading="lazy" />
             </figure>
           ))}
