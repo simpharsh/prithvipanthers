@@ -118,7 +118,7 @@
 }
 
 .sponsor-marquee {
-  width: 50%;
+  width: 72%;
   margin: 0 auto;
   align-self: center;
   overflow: hidden;
@@ -136,8 +136,8 @@
 
 .sponsor-logo {
   flex: 0 0 auto;
-  width: 110px;
-  padding: 0 6px;
+  width: 160px;
+  padding: 0 10px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -145,7 +145,7 @@
 
 .sponsor-logo img {
   max-width: 100%;
-  max-height: 50px;
+  max-height: 78px;
   object-fit: contain;
   opacity: 0.7;
   transition: opacity 0.3s;
@@ -187,6 +187,19 @@
   .content-shell,
   .stats-grid {
     width: min(100%, calc(100% - 28px));
+  }
+
+  .sponsor-marquee {
+    width: 100%;
+  }
+
+  .sponsor-logo {
+    width: 130px;
+    padding: 0 8px;
+  }
+
+  .sponsor-logo img {
+    max-height: 62px;
   }
 
   .stats-grid {

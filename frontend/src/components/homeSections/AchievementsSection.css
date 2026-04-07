@@ -1,4 +1,8 @@
 /* --- ACHIEVEMENTS STACK CARDS --- */
+.content-shell.achievements-section {
+  padding-top: 38px;
+}
+
 .achievement-stack {
   display: flex;
   justify-content: center;

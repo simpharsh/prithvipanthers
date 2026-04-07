@@ -1,4 +1,8 @@
 /* --- MEDIA SECTION --- */
+.content-shell.media-section {
+  padding-top: 38px;
+}
+
 .media-layout {
   display: grid;
   grid-template-columns: 1fr 1.4fr;
@@ -29,7 +33,7 @@
 .media-footer-link a {
   color: #8a8d91;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 13px;
+  font-size: 20px;
   text-decoration: none;
   font-style: italic;
 }
