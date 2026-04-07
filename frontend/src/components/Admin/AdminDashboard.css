@@ -7,7 +7,7 @@
 }
 
 .admin-sidebar {
-  width: 280px;
+  width: 300px;
   height: 100vh;
   background: linear-gradient(180deg, #121927 0%, #1a2436 100%);
   color: white;
@@ -29,14 +29,10 @@
   gap: 12px;
 }
 
-.admin-brand::before {
-  content: '';
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  background-color: #f05244;
-  border-radius: 50%;
-  box-shadow: 0 0 10px rgba(240, 82, 68, 0.8);
+.admin-brand-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 
 .admin-nav {

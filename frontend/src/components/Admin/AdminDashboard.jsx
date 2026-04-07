@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './AdminDashboard.css';
+import logo from '../../assets/common/logo.png';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('players');
@@ -20,7 +21,10 @@ const AdminDashboard = () => {
   return (
     <div className="admin-layout">
       <aside className="admin-sidebar">
-        <div className="admin-brand">PANTHERS ADMIN</div>
+        <div className="admin-brand">
+          <img src={logo} alt="Panthers logo" className="admin-brand-logo" />
+          <span>PANTHERS ADMIN</span>
+        </div>
         <nav className="admin-nav">
           <button className={activeTab === 'players' ? 'active' : ''} onClick={() => setActiveTab('players')}>Players</button>
           <button className={activeTab === 'gallery' ? 'active' : ''} onClick={() => setActiveTab('gallery')}>Gallery</button>
