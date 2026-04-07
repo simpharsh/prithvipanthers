@@ -98,7 +98,12 @@ const Contact = () => {
               </div>
 
               <div className="info-row">
-                <span className="info-icon">⌖</span>
+                <span className="info-icon" aria-label="Location pin" role="img">
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.03 5.33 11.57 6.18 12.58a1 1 0 0 0 1.54 0C13.67 20.57 19 14.03 19 9c0-3.87-3.13-7-7-7Z" fill="currentColor" />
+                    <circle cx="12" cy="9" r="3" fill="#ffffff" />
+                  </svg>
+                </span>
                 <div>
                   <h3>Location</h3>
                   <p>Mehsana, Gujarat, India</p>

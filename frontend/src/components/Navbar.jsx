@@ -20,7 +20,7 @@ const Navbar = () => {
         <Link to="/" aria-label="Pruthvi Panthers Home" onClick={closeMobileMenu}>
           <img src={logo} alt="Pruthvi Panthers Logo" className="logo" />
         </Link>
-        <span className="brand-name">PRUVTHVI PANTHERS MEHSANA</span>
+        <span className="brand-name">PRUTHVI PANTHERS MEHSANA</span>
       </div>
       
       <div className="navbar-right">
