@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import './AdminAuth.css';
+import { pageTransition } from '../../utils/pageMotion';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -30,8 +32,14 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="admin-login-container">
-      <div className="admin-login-card">
+    <motion.div
+      className="admin-login-container"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
+      <motion.div className="admin-login-card" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.3 }}>
         <h2>Admin Security Gateway</h2>
         <form onSubmit={handleLogin}>
           {error && <div className="error-msg">{error}</div>}
@@ -55,8 +63,8 @@ const AdminLogin = () => {
           </div>
           <button type="submit" className="login-btn">Secure Login</button>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

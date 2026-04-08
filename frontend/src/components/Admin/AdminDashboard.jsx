@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 import './AdminDashboard.css';
 import logo from '../../assets/common/logo.png';
+import { pageTransition } from '../../utils/pageMotion';
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('players');
@@ -19,7 +21,13 @@ const AdminDashboard = () => {
   }, [navigate]);
 
   return (
-    <div className="admin-layout">
+    <motion.div
+      className="admin-layout"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <aside className="admin-sidebar">
         <div className="admin-brand">
           <img src={logo} alt="Panthers logo" className="admin-brand-logo" />
@@ -35,14 +43,23 @@ const AdminDashboard = () => {
       </aside>
 
       <main className="admin-content">
-        <div key={activeTab} className="fade-in">
-          {activeTab === 'players' && <ManagePlayers />}
-          {activeTab === 'gallery' && <ManageGallery />}
-          {activeTab === 'leads' && <ManageLeads />}
-          {activeTab === 'views' && <ManageViews />}
-        </div>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            className="fade-in"
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.25 }}
+          >
+            {activeTab === 'players' && <ManagePlayers />}
+            {activeTab === 'gallery' && <ManageGallery />}
+            {activeTab === 'leads' && <ManageLeads />}
+            {activeTab === 'views' && <ManageViews />}
+          </motion.div>
+        </AnimatePresence>
       </main>
-    </div>
+    </motion.div>
   );
 };
 

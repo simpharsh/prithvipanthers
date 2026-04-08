@@ -1,6 +1,8 @@
 // src/components/About.jsx (Revised for precise visual match)
 import React, { useEffect } from 'react';
+import { motion } from 'framer-motion';
 import './about.css'; // Standard case-sensitive import
+import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
 
 // --- TOP SECTION IMAGES ---
 import aboutImg1 from '../assets/about/image-1.jpeg';
@@ -54,7 +56,13 @@ const About = () => {
   }, []);
 
   return (
-    <div className="about-page">
+    <motion.div
+      className="about-page"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       
       {/* ================= TOP INTRO SECTION ================= */}
       <section className="about-intro-section">
@@ -93,10 +101,20 @@ const About = () => {
           <p>Meet the visionaries leading the Pruthvi Panthers.</p>
         </div>
 
-        <div className="owners-list">
+        <motion.div
+          className="owners-list"
+          variants={sectionStagger}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+        >
           {owners.map((owner, index) => (
             // Alternate logic: If the index is odd (1, 3, etc.), apply the 'reverse' class
-            <div key={owner.id} className={`owner-detail-card ${index % 2 !== 0 ? 'reverse' : ''}`}>
+            <motion.div
+              key={owner.id}
+              className={`owner-detail-card ${index % 2 !== 0 ? 'reverse' : ''}`}
+              variants={itemReveal}
+            >
               <div className="owner-detail-image">
                 <img src={owner.img} alt={owner.name} />
               </div>
@@ -105,12 +123,12 @@ const About = () => {
                 <h4>{owner.subtitle}</h4>
                 <p>{owner.description}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
-    </div>
+    </motion.div>
   );
 };
 

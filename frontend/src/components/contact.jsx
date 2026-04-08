@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import './contact.css';
+import { pageTransition } from '../utils/pageMotion';
 
 const initialState = {
   name: '',
@@ -50,15 +52,33 @@ const Contact = () => {
   };
 
   return (
-    <div className="contact-page">
+    <motion.div
+      className="contact-page"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <section className="contact-shell">
         <div className="contact-shell-inner">
-          <header className="contact-header">
+          <motion.header
+            className="contact-header"
+            initial={{ opacity: 0, y: 14 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.25 }}
+            transition={{ duration: 0.35 }}
+          >
             <h1>GET IN TOUCH</h1>
             <p>Join us on our journey to excellence</p>
-          </header>
+          </motion.header>
 
-          <section className="contact-content">
+          <motion.section
+            className="contact-content"
+            initial={{ opacity: 0, y: 18 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.4, delay: 0.08 }}
+          >
             <form className="contact-form" onSubmit={handleSubmit}>
               <h2>SEND US A MESSAGE</h2>
 
@@ -110,10 +130,10 @@ const Contact = () => {
                 </div>
               </div>
             </aside>
-          </section>
+          </motion.section>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 

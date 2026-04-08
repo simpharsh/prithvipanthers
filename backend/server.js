@@ -31,6 +31,81 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
+const GALLERY_TABLES = ['gallary', 'gallery'];
+
+const normalizeUploadPath = (value) => {
+  if (!value || typeof value !== 'string') return null;
+
+  if (value.startsWith('http://') || value.startsWith('https://')) {
+    const uploadsIndex = value.indexOf('/uploads/');
+    return uploadsIndex >= 0 ? value.slice(uploadsIndex) : value;
+  }
+
+  if (value.startsWith('/uploads/')) return value;
+  if (value.startsWith('uploads/')) return `/${value}`;
+
+  // If DB stores only filename/image id, serve from backend uploads.
+  return `/uploads/${path.basename(value)}`;
+};
+
+const mapGalleryRowToResponse = (row) => {
+  const candidatePath =
+    row?.image_url ||
+    row?.imageUrl ||
+    row?.image_id ||
+    row?.imageId ||
+    row?.image_name ||
+    row?.imageName ||
+    row?.filename ||
+    row?.file_name ||
+    row?.name ||
+    row?.url;
+
+  return {
+    ...row,
+    image_url: normalizeUploadPath(candidatePath),
+  };
+};
+
+const readGalleryRows = async (db) => {
+  let lastError = null;
+
+  for (const tableName of GALLERY_TABLES) {
+    const { data, error } = await db.from(tableName).select('*').order('id', { ascending: false });
+    if (!error) {
+      return { tableName, data: Array.isArray(data) ? data : [] };
+    }
+    lastError = error;
+  }
+
+  throw lastError;
+};
+
+const insertGalleryRow = async (db, file) => {
+  const payloadByTable = {
+    gallary: {
+      name: file.originalname,
+      image_id: file.filename,
+    },
+    gallery: {
+      image_url: `/uploads/${file.filename}`,
+    },
+  };
+
+  let lastError = null;
+
+  for (const tableName of GALLERY_TABLES) {
+    const payload = payloadByTable[tableName];
+    if (!payload) continue;
+
+    const { error } = await db.from(tableName).insert([payload]);
+    if (!error) return { tableName };
+    lastError = error;
+  }
+
+  throw lastError;
+};
+
 let isPublicDbConnected = false;
 let isAdminDbConnected = false;
 
@@ -95,9 +170,13 @@ app.get('/api/players', async (req, res) => {
 app.get('/api/gallery', async (req, res) => {
   if (!isAdminDbConnected && !isPublicDbConnected) return res.json([]);
   const db = adminSupabase || publicSupabase;
-  const { data, error } = await db.from('gallery').select('*').order('id', { ascending: false });
-  if (error) return res.status(500).json({ error: error.message });
-  res.json(data);
+  try {
+    const { data } = await readGalleryRows(db);
+    const response = data.map(mapGalleryRowToResponse);
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
 app.post('/api/track-view', async (req, res) => {
@@ -218,12 +297,8 @@ app.post('/api/admin/gallery', authenticateAdmin, upload.single('image'), async 
     console.log('[GALLERY] Received upload:', { imageUrl, filename: req.file.filename });
 
     if (!isAdminDbConnected) return res.status(503).json({ message: 'No admin DB connection' });
-    const { error } = await adminSupabase.from('gallery').insert([{ image_url: imageUrl }]);
-    if (error) {
-      console.error('[GALLERY] Database error:', error);
-      return res.status(500).json({ error: error.message });
-    }
-    console.log('[GALLERY] Success');
+    const { tableName } = await insertGalleryRow(adminSupabase, req.file);
+    console.log('[GALLERY] Success in table:', tableName);
     res.json({ message: 'Gallery image uploaded', url: imageUrl });
   } catch (err) {
     console.error('[GALLERY] Caught error:', err);

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { motion } from 'framer-motion';
 import './home.css';
 import HeroSlider from './homeSections/HeroSlider';
 import AboutSection from './homeSections/AboutSection';
@@ -35,6 +36,7 @@ import opufnt from '../assets/home/opufnt.png';
 import nptsi from '../assets/home/nptsi.png';
 import bharat from '../assets/home/bharat.png';
 import mahakali from '../assets/home/mahakali.png';
+import { pageTransition } from '../utils/pageMotion';
 
 const Home = () => {
   const stats = useMemo(() => [
@@ -179,7 +181,13 @@ const Home = () => {
   }, [stats, visibleSections.stats]);
 
   return (
-    <div className="home-page">
+    <motion.div
+      className="home-page"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <HeroSlider
         slides={heroSlidesData}
         currentSlide={currentSlide}
@@ -262,7 +270,7 @@ const Home = () => {
           </div>
         </div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 

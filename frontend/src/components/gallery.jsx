@@ -1,14 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import './gallery.css';
+import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
 
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState([]);
   const tilePattern = ['tile-xl', 'tile-tall', 'tile-wide', 'tile-small', 'tile-wide', 'tile-small', 'tile-tall', 'tile-xl'];
 
+  const resolveImageUrl = (item) => {
+    const rawPath = item?.image_url || item?.imageUrl || item?.url || '';
+    if (!rawPath || typeof rawPath !== 'string') return '';
+    if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) return rawPath;
+    return rawPath.startsWith('/')
+      ? `http://localhost:5000${rawPath}`
+      : `http://localhost:5000/${rawPath}`;
+  };
+
   useEffect(() => {
     fetch('http://localhost:5000/api/gallery')
       .then(res => res.json())
-      .then(data => setGalleryImages(data))
+      .then((data) => {
+        const normalizedImages = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.gallery)
+            ? data.gallery
+            : Array.isArray(data?.images)
+              ? data.images
+              : [];
+        setGalleryImages(normalizedImages);
+      })
       .catch(console.error);
 
     // View Tracker
@@ -20,22 +40,33 @@ const Gallery = () => {
   }, []);
 
   return (
-    <div className="gallery-page">
+    <motion.div
+      className="gallery-page"
+      variants={pageTransition}
+      initial="initial"
+      animate="animate"
+      exit="exit"
+    >
       <section className="gallery-hero">
         <h1>PANTHERS GALLERY</h1>
         <p>Match moments, celebrations, and behind-the-scenes highlights.</p>
       </section>
 
       <section className="gallery-grid-section">
-        <div className="gallery-grid">
+        <motion.div
+          className="gallery-grid"
+          variants={sectionStagger}
+          initial="hidden"
+          animate="visible"
+        >
           {galleryImages.map((item, index) => (
-            <figure className={`gallery-item ${tilePattern[index % tilePattern.length]}`} key={item.id}>
-              <img src={`http://localhost:5000${item.image_url}`} alt={`Pruthvi Panthers gallery ${item.id}`} loading="lazy" />
-            </figure>
+            <motion.figure className={`gallery-item ${tilePattern[index % tilePattern.length]}`} key={item.id} variants={itemReveal}>
+              <img src={resolveImageUrl(item)} alt={`Pruthvi Panthers gallery ${item.id || index + 1}`} loading="lazy" />
+            </motion.figure>
           ))}
-        </div>
+        </motion.div>
       </section>
-    </div>
+    </motion.div>
   );
 };
 
