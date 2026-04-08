@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './contact.css';
 import { pageTransition } from '../utils/pageMotion';
-import { FiMail, FiPhone } from 'react-icons/fi';
+import { FiAlertCircle, FiCheckCircle, FiMail, FiPhone } from 'react-icons/fi';
 import { IoLocationOutline } from 'react-icons/io5';
+import logo from '../assets/common/logo.png';
 
 const initialState = {
   name: '',
@@ -14,6 +15,7 @@ const initialState = {
 const Contact = () => {
   const [formData, setFormData] = useState(initialState);
   const [status, setStatus] = useState({ type: '', message: '' });
+  const [submitState, setSubmitState] = useState('idle');
 
   useEffect(() => {
     fetch('http://localhost:5000/api/track-view', {
@@ -25,11 +27,16 @@ const Contact = () => {
 
   const handleChange = (event) => {
     const { name, value } = event.target;
+    if (submitState === 'sent') {
+      setSubmitState('idle');
+    }
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (submitState === 'sending') return;
+    setSubmitState('sending');
     setStatus({ type: '', message: '' });
 
 
@@ -46,9 +53,11 @@ const Contact = () => {
         throw new Error(payload.message || 'Unable to send your message right now.');
       }
 
+      setSubmitState('sent');
       setStatus({ type: 'success', message: 'Message sent successfully. We will contact you soon.' });
       setFormData(initialState);
     } catch (error) {
+      setSubmitState('idle');
       setStatus({ type: 'error', message: error.message || 'Something went wrong. Please try again.' });
     }
   };
@@ -93,10 +102,40 @@ const Contact = () => {
               <label htmlFor="message">Your Message *</label>
               <textarea id="message" name="message" placeholder="Your Message" value={formData.message} onChange={handleChange} rows="4" required />
 
-              <button type="submit">SEND MESSAGE</button>
+              <button type="submit" disabled={submitState === 'sending'}>
+                {submitState === 'sending' ? 'SENDING...' : submitState === 'sent' ? 'SENT' : 'SEND MESSAGE'}
+              </button>
+
+              {submitState === 'sending' && (
+                <div className="contact-submit-progress" role="status" aria-live="polite">
+                  <span>Sending your message...</span>
+                  <div className="contact-submit-progress-track" aria-hidden="true">
+                    <div className="contact-submit-progress-bar" />
+                  </div>
+                </div>
+              )}
 
               {status.message && (
-                <p className={`contact-status ${status.type}`}>{status.message}</p>
+                <div className={`contact-status ${status.type}`} role="status" aria-live="polite">
+                  <div className="contact-status-icon-wrap" aria-hidden="true">
+                    {status.type === 'success' ? (
+                      <FiCheckCircle className="contact-status-icon" />
+                    ) : (
+                      <FiAlertCircle className="contact-status-icon" />
+                    )}
+                  </div>
+                  <div className="contact-status-copy">
+                    <div className="contact-status-title">
+                      {status.type === 'success' ? 'Message sent successfully' : 'Message could not be sent'}
+                    </div>
+                    <p>{status.message}</p>
+                  </div>
+                  {status.type === 'success' && (
+                    <div className="contact-status-logo-wrap">
+                      <img src={logo} alt="Pruthvi Panthers" className="contact-status-logo" />
+                    </div>
+                  )}
+                </div>
               )}
             </form>
 

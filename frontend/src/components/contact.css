@@ -143,18 +143,125 @@
   transform: translateY(-1px);
 }
 
-.contact-status {
-  margin: 14px 0 0;
+.contact-form button:disabled {
+  cursor: not-allowed;
+  background: #9ca3af;
+  transform: none;
+  opacity: 0.95;
+}
+
+.contact-submit-progress {
+  margin-top: 10px;
+  display: grid;
+  gap: 6px;
+  color: #dbe3f0;
   font-family: 'Bebas Neue', sans-serif;
   font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.contact-submit-progress-track {
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  overflow: hidden;
+}
+
+.contact-submit-progress-bar {
+  width: 32%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f97316, #f45a46 55%, #f97316);
+  animation: contactSending 1.05s linear infinite;
+}
+
+@keyframes contactSending {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(350%);
+  }
+}
+
+.contact-status {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 14px 0 0;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  line-height: 1.35;
+  border: 1px solid transparent;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
 }
 
 .contact-status.success {
-  color: #53d79b;
+  color: #eafff4;
+  background: linear-gradient(135deg, rgba(13, 148, 136, 0.96), rgba(16, 185, 129, 0.9));
+  border-color: rgba(255, 255, 255, 0.14);
 }
 
 .contact-status.error {
-  color: #ff9188;
+  color: #fff1f1;
+  background: linear-gradient(135deg, rgba(185, 28, 28, 0.96), rgba(239, 68, 68, 0.9));
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.contact-status-icon-wrap {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.contact-status-icon {
+  font-size: 22px;
+}
+
+.contact-status-copy {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-status-title {
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+}
+
+.contact-status-copy p {
+  margin: 4px 0 0;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  opacity: 0.92;
+}
+
+.contact-status-logo-wrap {
+  flex: 0 0 auto;
+  width: 54px;
+  height: 54px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+}
+
+.contact-status-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
 .contact-info {

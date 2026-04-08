@@ -16,7 +16,7 @@ const OwnersSection = ({ isVisible, registerSection, owners }) => {
             <div className="owner-card-body">
               <h3>{owner.name}</h3>
               <span>{owner.role}</span>
-              <p>Guiding the Panthers with strong leadership and local pride.</p>
+              <p>{owner.details}</p>
             </div>
           </article>
         ))}

@@ -93,10 +93,10 @@ const Home = () => {
   ];
 
   const owners = [
-    { id: 1, name: 'AJAY BAROT', role: 'Discipline & Trust', img: ownerAjay },
-    { id: 2, name: 'JUGAL SINGH THAKUR', role: 'Public Leadership', img: ownerJugal },
-    { id: 3, name: 'SHAILESH CHAUHAN', role: 'Business Strategy', img: ownerShailesh },
-    { id: 4, name: 'GIRISH PATEL', role: 'Construction Leadership', img: ownerGirish },
+    { id: 1, name: 'AJAY BAROT', role: 'Discipline & Trust', img: ownerAjay ,details:'Ensures discipline and trust from his civic and arms trade experience.' },
+    { id: 2, name: 'JUGAL SINGH THAKOR', role: 'Public Leadership', img: ownerJugal ,details:'A former MP, blends political leadership with hospitality expertise' },
+    { id: 3, name: 'SHAILESH CHAUDHARI', role: 'Business Strategy', img: ownerShailesh ,details:'Adds sharp business acumen and startup insight.' },
+    { id: 4, name: 'GIRISH PATEL', role: 'Construction Leadership', img: ownerGirish ,details:'Brings bold leadership from the construction world.' },
   ];
 
   const benefitCards = [

@@ -92,7 +92,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: rgba(0, 0, 0, 0.02);
+  color: rgba(0, 0, 0, 0.08);
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(100px, 15vw, 220px);
   line-height: 1;

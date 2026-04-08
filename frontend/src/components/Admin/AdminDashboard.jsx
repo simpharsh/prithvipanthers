@@ -68,7 +68,7 @@ const AdminDashboard = () => {
 const ManagePlayers = () => {
   const [players, setPlayers] = useState([]);
   const [form, setForm] = useState({ name: '', role: 'Batters', cover: null, photo: null });
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState({ type: '', message: '' });
 
   const fetchPlayers = () => {
     fetch('http://localhost:5000/api/players')
@@ -81,7 +81,7 @@ const ManagePlayers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setStatus('');
+    setStatus({ type: '', message: '' });
     const token = localStorage.getItem('adminToken');
     const formData = new FormData();
     formData.append('name', form.name);
@@ -98,13 +98,13 @@ const ManagePlayers = () => {
       if (res.ok) {
         setForm({ name: '', role: 'Batters', cover: null, photo: null });
         fetchPlayers();
-        setStatus('Player added successfully.');
+        setStatus({ type: 'success', message: 'Player added successfully.' });
       } else {
         const payload = await res.json().catch(() => ({}));
-        setStatus(payload.error || payload.message || 'Failed to add player.');
+        setStatus({ type: 'error', message: payload.error || payload.message || 'Failed to add player.' });
       }
     } catch (e) {
-      setStatus(e.message || 'Failed to add player.');
+      setStatus({ type: 'error', message: e.message || 'Failed to add player.' });
     }
   };
 
@@ -124,7 +124,12 @@ const ManagePlayers = () => {
       
       <div className="admin-card">
         <h3>Add New Player</h3>
-        {status && <p className="admin-status">{status}</p>}
+        {status.message && (
+          <div className={`admin-status ${status.type}`} role="status" aria-live="polite">
+            <span className="admin-status-dot" aria-hidden="true" />
+            <span>{status.message}</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="admin-form">
           <input placeholder="Player Name" value={form.name} onChange={e => setForm({...form, name: e.target.value})} required />
           <select value={form.role} onChange={e => setForm({...form, role: e.target.value})}>
@@ -168,7 +173,7 @@ const ManagePlayers = () => {
 const ManageGallery = () => {
   const [images, setImages] = useState([]);
   const [file, setFile] = useState(null);
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState({ type: '', message: '' });
 
   const fetchGallery = () => {
     fetch('http://localhost:5000/api/gallery')
@@ -181,7 +186,7 @@ const ManageGallery = () => {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return;
-    setStatus('');
+    setStatus({ type: '', message: '' });
     const token = localStorage.getItem('adminToken');
     const formData = new FormData();
     formData.append('image', file);
@@ -195,13 +200,13 @@ const ManageGallery = () => {
       if (res.ok) {
         setFile(null);
         fetchGallery();
-        setStatus('Gallery image uploaded successfully.');
+        setStatus({ type: 'success', message: 'Gallery image uploaded successfully.' });
       } else {
         const payload = await res.json().catch(() => ({}));
-        setStatus(payload.error || payload.message || 'Failed to upload gallery image.');
+        setStatus({ type: 'error', message: payload.error || payload.message || 'Failed to upload gallery image.' });
       }
     } catch (err) {
-      setStatus(err.message || 'Failed to upload gallery image.');
+      setStatus({ type: 'error', message: err.message || 'Failed to upload gallery image.' });
     }
   };
 
@@ -221,7 +226,12 @@ const ManageGallery = () => {
       
       <div className="admin-card">
         <h3>Upload New Image</h3>
-        {status && <p className="admin-status">{status}</p>}
+        {status.message && (
+          <div className={`admin-status ${status.type}`} role="status" aria-live="polite">
+            <span className="admin-status-dot" aria-hidden="true" />
+            <span>{status.message}</span>
+          </div>
+        )}
         <form onSubmit={handleUpload} className="admin-form" style={{flexDirection: 'row', alignItems: 'center'}}>
           <input type="file" accept="image/*" onChange={e => setFile(e.target.files[0])} required />
           <button type="submit" className="save-btn" style={{width: 'auto'}}>Upload Image</button>
