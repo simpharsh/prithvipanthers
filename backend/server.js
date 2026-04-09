@@ -220,119 +220,34 @@ app.post('/api/contact', async (req, res) => {
 
   // Send confirmation email to admin
   try {
-    const hasClubLogo = fs.existsSync(clubLogoPath);
-    const hasClubAppIcon = fs.existsSync(clubAppIconPath);
     const safeName = escapeHtml(name);
     const safeEmail = escapeHtml(email);
     const safeMessage = escapeHtml(message).replace(/\n/g, '<br />');
 
-    const emailAttachments = [];
-    if (hasClubLogo) {
-      emailAttachments.push({ filename: 'pruthvi-panthers-logo.png', path: clubLogoPath, cid: clubLogoCid });
-    }
-    if (hasClubAppIcon) {
-      emailAttachments.push({ filename: 'pruthvi-panthers-app-icon.png', path: clubAppIconPath, cid: clubAppIconCid });
-    }
-
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_USER,
+      to: [process.env.EMAIL_USER, 'harshlpatel.4274@gmail.com', email],
       replyTo: email,
       subject: `New Contact Form Submission from ${name}`,
       html: `
-        <div style="display:none;font-size:1px;color:#0b1220;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">
-          New contact request from ${safeName}
+        <div style="font-family: sans-serif; color: #333; line-height: 1.6; max-width: 600px; margin: 0 auto; padding: 20px;">
+          <h2 style="color: #0f172a;">Thank You for Your Contact Request!</h2>
+          <p>Dear ${safeName},</p>
+          <p>We've received your contact request and appreciate your interest in Pruthvi Panthers.</p>
+          <p>Our team will review your request and contact you soon to discuss the next steps.</p>
+          
+          <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;" />
+          
+          <p><strong>Name:</strong> ${safeName}</p>
+          <p><strong>Email:</strong> ${safeEmail}</p>
+          <p><strong>Message:</strong><br/>${safeMessage}</p>
+          
+          <hr style="border: none; border-top: 1px solid #ccc; margin: 20px 0;" />
+          
+          <p>Thank you for choosing Pruthvi Panthers!</p>
+          <p>Best regards,<br/>The Pruthvi Panthers Team</p>
         </div>
-        <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#eef2f7;padding:40px 20px;font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;">
-          <tr>
-            <td align="center">
-              <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="max-width:680px;background:#ffffff;border-radius:24px;overflow:hidden;box-shadow:0 24px 48px rgba(15,23,42,0.1);">
-                
-                <!-- HEADER STRIP -->
-                <tr>
-                  <td style="padding:16px 32px;background:#f8fafc;border-bottom:1px solid #e2e8f0;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%">
-                      <tr>
-                        <td align="left" style="color:#64748b;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Official Website Enquiry</td>
-                        <td align="right" style="color:#94a3b8;font-size:12px;font-weight:500;letter-spacing:0.5px;">Panthers HQ Contact Desk</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
-                <!-- HERO SECTION -->
-                <tr>
-                  <td style="padding:48px 32px;background:linear-gradient(135deg, #111827 0%, #1e293b 100%);text-align:center;position:relative;">
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 20px;">
-                      <tr>
-                        <td style="padding-right:12px;">${hasClubAppIcon ? `<img src="cid:${clubAppIconCid}" alt="Pruthvi Panthers App" width="48" height="48" style="display:block;border-radius:12px;box-shadow:0 8px 16px rgba(0,0,0,0.2);" />` : ''}</td>
-                        <td>${hasClubLogo ? `<img src="cid:${clubLogoCid}" alt="Pruthvi Panthers Logo" width="88" height="88" style="display:block;object-fit:contain;filter:drop-shadow(0 8px 16px rgba(0,0,0,0.3));" />` : ''}</td>
-                        <td style="padding-left:12px;">${hasClubAppIcon ? `<img src="cid:${clubAppIconCid}" alt="Pruthvi Panthers App" width="48" height="48" style="display:block;border-radius:12px;box-shadow:0 8px 16px rgba(0,0,0,0.2);" />` : ''}</td>
-                      </tr>
-                    </table>
-                    <div style="font-size:13px;color:#f87171;letter-spacing:4px;text-transform:uppercase;font-weight:700;margin-bottom:12px;">Pruthvi Panthers</div>
-                    <h2 style="margin:0 0 16px;color:#ffffff;font-size:36px;font-weight:800;line-height:1.2;letter-spacing:-0.5px;">New Message<br/>Received</h2>
-                    <p style="margin:0 auto;color:#94a3b8;font-size:16px;line-height:1.6;max-width:400px;">A supporter has just submitted a new enquiry through the official website contact form.</p>
-                    
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:24px auto 0;">
-                      <tr>
-                        <td style="padding:8px 16px;background:rgba(255,255,255,0.1);color:#e2e8f0;border-radius:999px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;border:1px solid rgba(255,255,255,0.05);">Website Lead</td>
-                        <td style="width:12px;"></td>
-                        <td style="padding:8px 16px;background:rgba(244,90,70,0.2);color:#fca5a5;border-radius:999px;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;border:1px solid rgba(244,90,70,0.3);">High Priority</td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-
-                <!-- DETAILS SECTION -->
-                <tr>
-                  <td style="padding:40px 32px;background:#ffffff;">
-                    <h3 style="margin:0 0 24px;color:#0f172a;font-size:20px;font-weight:700;letter-spacing:-0.3px;border-bottom:2px solid #f1f5f9;padding-bottom:12px;">Sender Details</h3>
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="border-collapse:separate;border-spacing:0 16px;">
-                      <tr>
-                        <td style="width:140px;padding:16px 20px;background:#f8fafc;color:#64748b;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;border-radius:12px 0 0 12px;border:1px solid #e2e8f0;border-right:none;">Full Name</td>
-                        <td style="padding:16px 20px;background:#ffffff;color:#0f172a;font-size:16px;font-weight:500;border-radius:0 12px 12px 0;border:1px solid #e2e8f0;border-left:none;">${safeName}</td>
-                      </tr>
-                      <tr>
-                        <td style="width:140px;padding:16px 20px;background:#f8fafc;color:#64748b;font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;border-radius:12px 0 0 12px;border:1px solid #e2e8f0;border-right:none;">Email Address</td>
-                        <td style="padding:16px 20px;background:#ffffff;color:#0f172a;font-size:16px;font-weight:500;border-radius:0 12px 12px 0;border:1px solid #e2e8f0;border-left:none;"><a href="mailto:${safeEmail}" style="color:#0ea5e9;text-decoration:none;">${safeEmail}</a></td>
-                      </tr>
-                    </table>
-                    
-                    <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;padding:24px;margin-top:24px;box-shadow:0 4px 6px rgba(0,0,0,0.02);">
-                      <div style="font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:#64748b;margin-bottom:16px;display:flex;align-items:center;">
-                        <span style="display:inline-block;width:8px;height:8px;background:#f45a46;border-radius:50%;margin-right:8px;"></span>
-                        Message Content
-                      </div>
-                      <div style="font-size:16px;line-height:1.8;color:#334155;">${safeMessage}</div>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- ACTION SECTION -->
-                <tr>
-                  <td style="padding:16px 32px 48px;background:#ffffff;text-align:center;">
-                    <a href="mailto:${safeEmail}" style="display:inline-block;background:linear-gradient(135deg, #f45a46 0%, #dc2626 100%);color:#ffffff;text-decoration:none;font-size:15px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:18px 40px;border-radius:999px;box-shadow:0 8px 20px rgba(244,90,70,0.3);">Reply to Enquiry</a>
-                  </td>
-                </tr>
-
-                <!-- FOOTER STRIP -->
-                <tr>
-                  <td style="padding:24px 32px;background:#0f172a;border-top:1px solid #1e293b;text-align:center;">
-                    <div style="font-size:12px;letter-spacing:0.8px;color:#64748b;text-transform:uppercase;font-weight:500;">
-                      © ${new Date().getFullYear()} Pruthvi Panthers. strictly confidential.
-                    </div>
-                  </td>
-                </tr>
-              </table>
-              <div style="padding-top:24px;text-align:center;color:#94a3b8;font-size:13px;">
-                This email was sent automatically from the Pruthvi Panthers Website.
-              </div>
-            </td>
-          </tr>
-        </table>
       `,
-      attachments: emailAttachments,
     });
   } catch (emailError) {
     console.warn('Failed to send email notification:', emailError.message);
