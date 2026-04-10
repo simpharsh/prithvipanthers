@@ -96,7 +96,7 @@ const ManagePlayers = () => {
   const fetchPlayers = () => {
     fetch('/api/players')
       .then(res => res.json())
-      .then(data => setPlayers(data))
+      .then(data => setPlayers(Array.isArray(data) ? data : []))
       .catch(err => console.error(err));
   };
 
@@ -218,7 +218,7 @@ const ManageGallery = () => {
   const fetchGallery = () => {
     fetch('/api/gallery')
       .then(res => res.json())
-      .then(data => setImages(data))
+      .then(data => setImages(Array.isArray(data) ? data : []))
       .catch(err => console.error(err));
   };
   useEffect(() => { fetchGallery(); }, []);
@@ -300,7 +300,7 @@ const ManageLeads = () => {
     const token = localStorage.getItem('adminToken');
     fetch('/api/admin/leads', { headers: { 'Authorization': `Bearer ${token}` }})
       .then(res => res.json())
-      .then(data => setLeads(data))
+      .then(data => setLeads(Array.isArray(data) ? data : []))
       .catch(console.error);
   }, []);
 
@@ -332,7 +332,7 @@ const ManageViews = () => {
     const token = localStorage.getItem('adminToken');
     fetch('/api/admin/views', { headers: { 'Authorization': `Bearer ${token}` }})
       .then(res => res.json())
-      .then(data => setViews(data))
+      .then(data => setViews(Array.isArray(data) ? data : []))
       .catch(console.error);
   }, []);
 
