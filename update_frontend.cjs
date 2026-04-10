@@ -1,4 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+const fs = require('fs');
+
+const jsxContent = `import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { createClient } from '@supabase/supabase-js';
@@ -13,7 +15,7 @@ const supabase = createClient(
 
 const uploadImageToSupabase = async (file, bucketName = 'gallery') => {
   const fileExt = file.name.split('.').pop();
-  const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+  const fileName = \`\${Date.now()}-\${Math.random().toString(36).substring(2)}.\${fileExt}\`;
   
   const { error } = await supabase.storage
     .from(bucketName)
@@ -188,7 +190,7 @@ const ManagePlayers = () => {
       const res = await fetch(url, {
         method,
         headers: { 
-          'Authorization': `Bearer ${token}`,
+          'Authorization': \`Bearer \${token}\`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
@@ -209,9 +211,9 @@ const ManagePlayers = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this player?')) return;
     const token = localStorage.getItem('adminToken');
-    await fetch(`/api/players?id=${id}`, {
+    await fetch(\`/api/players?id=\${id}\`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': \`Bearer \${token}\` }
     });
     fetchPlayers();
   };
@@ -268,7 +270,7 @@ const ManagePlayers = () => {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Edit Player' : 'Add New Player'}>
         {status.message && (
-          <div className={`admin-status ${status.type}`}>
+          <div className={\`admin-status \${status.type}\`}>
             <span>{status.message}</span>
           </div>
         )}
@@ -326,7 +328,7 @@ const ManageGallery = () => {
       const res = await fetch('/api/gallery', {
         method: 'POST',
         headers: { 
-          'Authorization': `Bearer ${token}`,
+          'Authorization': \`Bearer \${token}\`,
           'Content-Type': 'application/json' 
         },
         body: JSON.stringify({ image_url, name: file.name })
@@ -348,9 +350,9 @@ const ManageGallery = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this image?')) return;
     const token = localStorage.getItem('adminToken');
-    await fetch(`/api/gallery?id=${id}`, {
+    await fetch(\`/api/gallery?id=\${id}\`, {
       method: 'DELETE',
-      headers: { 'Authorization': `Bearer ${token}` }
+      headers: { 'Authorization': \`Bearer \${token}\` }
     });
     fetchGallery();
   };
@@ -384,7 +386,7 @@ const ManageGallery = () => {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Upload New Image">
         {status.message && (
-          <div className={`admin-status ${status.type}`}>
+          <div className={\`admin-status \${status.type}\`}>
             <span>{status.message}</span>
           </div>
         )}
@@ -404,7 +406,7 @@ const ManageLeads = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
-    fetch('/api/admin/leads', { headers: { 'Authorization': `Bearer ${token}` }})
+    fetch('/api/admin/leads', { headers: { 'Authorization': \`Bearer \${token}\` }})
       .then(res => res.json())
       .then(data => setLeads(Array.isArray(data) ? data : []))
       .catch(console.error);
@@ -446,7 +448,7 @@ const ManageViews = () => {
   const [views, setViews] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
-    fetch('/api/admin/views', { headers: { 'Authorization': `Bearer ${token}` }})
+    fetch('/api/admin/views', { headers: { 'Authorization': \`Bearer \${token}\` }})
       .then(res => res.json())
       .then(data => setViews(Array.isArray(data) ? data : []))
       .catch(console.error);
@@ -473,3 +475,33 @@ const ManageViews = () => {
 };
 
 export default AdminDashboard;
+`;
+
+const cssContent = `.floating-add-btn { position: fixed; bottom: 40px; right: 40px; width: 60px; height: 60px; border-radius: 50%; background-color: var(--primary-color, #c19b6c); color: #fff; font-size: 32px; border: none; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; z-index: 1000; transition: transform 0.2s ease, background-color 0.2s ease; }
+.floating-add-btn:hover { transform: scale(1.1); background-color: var(--primary-dark, #a37c54); }
+.admin-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.admin-search { padding: 10px 15px; border-radius: 6px; border: 1px solid #333; background: var(--bg-dark-secondary, #1a1a1a); color: #fff; min-width: 250px; }
+.admin-modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; z-index: 9999; }
+.admin-modal { background: var(--bg-dark, #121212); border-radius: 8px; width: 90%; max-width: 500px; box-shadow: 0 5px 25px rgba(0,0,0,0.5); border: 1px solid #333; }
+.admin-modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; border-bottom: 1px solid #333; }
+.admin-modal-header h3 { margin: 0; color: var(--primary-color, #c19b6c); }
+.close-modal-btn { background: transparent; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+.admin-modal-body { padding: 20px; } .admin-modal-body form { display: flex; flex-direction: column; gap: 15px; }
+.admin-pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 20px; padding-bottom: 20px; }
+.admin-pagination button { padding: 8px 16px; background: var(--bg-dark-secondary, #1a1a1a); color: #fff; border: 1px solid #333; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; }
+.admin-pagination button:hover:not(:disabled) { background: var(--primary-color, #c19b6c); color: #000; }
+.admin-pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+.edit-btn { background: #3a86ff; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; margin-right: 0.5rem; }
+.edit-btn:hover { background: #2a6fdf; }
+.del-btn { background: #ff4757; color: white; border: none; padding: 5px 12px; border-radius: 4px; cursor: pointer; }
+.del-btn:hover { background: #ff273a; }
+`;
+
+fs.writeFileSync('frontend/src/components/Admin/AdminDashboard.jsx', jsxContent);
+
+const existingCss = fs.readFileSync('frontend/src/components/Admin/AdminDashboard.css', 'utf8');
+if (!existingCss.includes('.floating-add-btn')) {
+    fs.writeFileSync('frontend/src/components/Admin/AdminDashboard.css', existingCss + '\\n' + cssContent);
+}
+
+console.log("Successfully updated AdminDashboard.jsx and AdminDashboard.css.");
