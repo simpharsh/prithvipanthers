@@ -18,7 +18,7 @@ const Contact = () => {
   const [submitState, setSubmitState] = useState('idle');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/track-view', {
+    fetch('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'contact' })
@@ -41,7 +41,7 @@ const Contact = () => {
 
 
     try {
-      const response = await fetch('http://localhost:5000/api/contact', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)

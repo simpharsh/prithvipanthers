@@ -48,7 +48,7 @@ const About = () => {
   ];
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/track-view', {
+    fetch('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'about' })

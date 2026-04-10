@@ -10,7 +10,7 @@ const Player = () => {
   const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/players')
+    fetch('/api/players')
       .then(res => res.json())
       .then((data) => {
         // Accept both raw array and wrapped payloads from backend.
@@ -24,7 +24,7 @@ const Player = () => {
       .catch(console.error);
     
     // View Tracker
-    fetch('http://localhost:5000/api/track-view', {
+    fetch('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'player' })
@@ -87,8 +87,8 @@ const Player = () => {
             >
               {group.list.map((player) => (
                 <motion.article className="player-card" key={player.id} variants={itemReveal}>
-                  <img className="card-image cover" src={`http://localhost:5000${player.cover_image_url}`} alt={`${player.name} cover`} />
-                  <img className="card-image photo" src={`http://localhost:5000${player.photo_image_url}`} alt={player.name} />
+                  <img className="card-image cover" src={player.cover_image_url} alt={`${player.name} cover`} />
+                  <img className="card-image photo" src={player.photo_image_url} alt={player.name} />
                   <div className="player-name">{player.name}</div>
                 </motion.article>
               ))}

@@ -12,12 +12,12 @@ const Gallery = () => {
     if (!rawPath || typeof rawPath !== 'string') return '';
     if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) return rawPath;
     return rawPath.startsWith('/')
-      ? `http://localhost:5000${rawPath}`
-      : `http://localhost:5000/${rawPath}`;
+      ? rawPath
+      : `/${rawPath}`;
   };
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/gallery')
+    fetch('/api/gallery')
       .then(res => res.json())
       .then((data) => {
         const normalizedImages = Array.isArray(data)
@@ -32,7 +32,7 @@ const Gallery = () => {
       .catch(console.error);
 
     // View Tracker
-    fetch('http://localhost:5000/api/track-view', {
+    fetch('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'gallery' })

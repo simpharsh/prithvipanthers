@@ -1,9 +1,32 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { createClient } from '@supabase/supabase-js';
 import './AdminDashboard.css';
 import logo from '../../assets/common/logo.png';
 import { pageTransition } from '../../utils/pageMotion';
+
+const supabase = createClient(
+  process.env.REACT_APP_SUPABASE_URL || process.env.VITE_SUPABASE_URL,
+  process.env.REACT_APP_SUPABASE_PUBLISHABLE_DEFAULT_KEY || process.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
+);
+
+const uploadImageToSupabase = async (file, bucketName = 'gallery') => {
+  const fileExt = file.name.split('.').pop();
+  const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+  
+  const { error } = await supabase.storage
+    .from(bucketName)
+    .upload(fileName, file);
+
+  if (error) throw error;
+
+  const { data } = supabase.storage
+    .from(bucketName)
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+};
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState('players');
@@ -71,7 +94,7 @@ const ManagePlayers = () => {
   const [status, setStatus] = useState({ type: '', message: '' });
 
   const fetchPlayers = () => {
-    fetch('http://localhost:5000/api/players')
+    fetch('/api/players')
       .then(res => res.json())
       .then(data => setPlayers(data))
       .catch(err => console.error(err));
@@ -83,17 +106,34 @@ const ManagePlayers = () => {
     e.preventDefault();
     setStatus({ type: '', message: '' });
     const token = localStorage.getItem('adminToken');
-    const formData = new FormData();
-    formData.append('name', form.name);
-    formData.append('role', form.role);
-    if (form.cover) formData.append('cover', form.cover);
-    if (form.photo) formData.append('photo', form.photo);
 
     try {
-      const res = await fetch('http://localhost:5000/api/admin/players', {
+      setStatus({ type: 'info', message: 'Uploading images...' });
+      
+      let cover_image_url = null;
+      let photo_image_url = null;
+      
+      if (form.cover) {
+        cover_image_url = await uploadImageToSupabase(form.cover, 'uploads');
+      }
+      if (form.photo) {
+        photo_image_url = await uploadImageToSupabase(form.photo, 'uploads');
+      }
+
+      setStatus({ type: 'info', message: 'Saving player record...' });
+
+      const res = await fetch('/api/players', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name: form.name,
+          role: form.role,
+          cover_image_url,
+          photo_image_url
+        })
       });
       if (res.ok) {
         setForm({ name: '', role: 'Batters', cover: null, photo: null });
@@ -111,7 +151,7 @@ const ManagePlayers = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this player?')) return;
     const token = localStorage.getItem('adminToken');
-    await fetch(`http://localhost:5000/api/admin/players/${id}`, {
+    await fetch(`/api/players?id=${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -176,7 +216,7 @@ const ManageGallery = () => {
   const [status, setStatus] = useState({ type: '', message: '' });
 
   const fetchGallery = () => {
-    fetch('http://localhost:5000/api/gallery')
+    fetch('/api/gallery')
       .then(res => res.json())
       .then(data => setImages(data))
       .catch(err => console.error(err));
@@ -186,16 +226,20 @@ const ManageGallery = () => {
   const handleUpload = async (e) => {
     e.preventDefault();
     if (!file) return;
-    setStatus({ type: '', message: '' });
+    setStatus({ type: 'info', message: 'Uploading image to storage...' });
     const token = localStorage.getItem('adminToken');
-    const formData = new FormData();
-    formData.append('image', file);
-
+    
     try {
-      const res = await fetch('http://localhost:5000/api/admin/gallery', {
+      const image_url = await uploadImageToSupabase(file, 'uploads');
+      setStatus({ type: 'info', message: 'Saving gallery record...' });
+
+      const res = await fetch('/api/gallery', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}` },
-        body: formData
+        headers: { 
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json' 
+        },
+        body: JSON.stringify({ image_url, name: file.name })
       });
       if (res.ok) {
         setFile(null);
@@ -213,7 +257,7 @@ const ManageGallery = () => {
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this image?')) return;
     const token = localStorage.getItem('adminToken');
-    await fetch(`http://localhost:5000/api/admin/gallery/${id}`, {
+    await fetch(`/api/gallery?id=${id}`, {
       method: 'DELETE',
       headers: { 'Authorization': `Bearer ${token}` }
     });
@@ -241,7 +285,7 @@ const ManageGallery = () => {
       <div className="admin-gallery-grid">
         {images.map(img => (
           <div key={img.id} className="admin-gallery-item">
-            <img src={`http://localhost:5000${img.image_url}`} alt="gallery" />
+            <img src={img.image_url} alt="gallery" />
             <button className="del-btn block-btn" onClick={() => handleDelete(img.id)}>Delete</button>
           </div>
         ))}
@@ -254,7 +298,7 @@ const ManageLeads = () => {
   const [leads, setLeads] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
-    fetch('http://localhost:5000/api/admin/leads', { headers: { 'Authorization': `Bearer ${token}` }})
+    fetch('/api/admin/leads', { headers: { 'Authorization': `Bearer ${token}` }})
       .then(res => res.json())
       .then(data => setLeads(data))
       .catch(console.error);
@@ -286,7 +330,7 @@ const ManageViews = () => {
   const [views, setViews] = useState([]);
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
-    fetch('http://localhost:5000/api/admin/views', { headers: { 'Authorization': `Bearer ${token}` }})
+    fetch('/api/admin/views', { headers: { 'Authorization': `Bearer ${token}` }})
       .then(res => res.json())
       .then(data => setViews(data))
       .catch(console.error);
