@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       const response = data.map((row) => ({
         ...row,
         // Since we are no longer using /uploads/, it will use the direct supabase URL
-        image_url: row?.image_url || row?.imageUrl || row?.url,
+        image_url: row?.image_url || row?.imageUrl || row?.url || row?.image_id,
       }));
 
       return res.status(200).json(response);
