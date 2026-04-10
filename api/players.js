@@ -38,6 +38,30 @@ export default async function handler(req, res) {
     }
   }
 
+  if (method === 'PUT') {
+    try {
+      const { id, name, role, cover_image_url, photo_image_url } = req.body;
+      
+      if (!id) return res.status(400).json({ message: 'Player ID required' });
+      if (!isAdminDbConnected) return res.status(503).json({ message: 'No admin DB connection' });
+      
+      const payload = { name, role };
+      if (cover_image_url) payload.cover_image_url = cover_image_url;
+      if (photo_image_url) payload.photo_image_url = photo_image_url;
+
+      const { data, error } = await adminSupabase
+        .from('players')
+        .update(payload)
+        .eq('id', id);
+        
+      if (error) return res.status(500).json({ error: error.message });
+      return res.status(200).json({ message: 'Player updated', data });
+      
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  }
+
   if (method === 'DELETE') {
     const { id } = req.query;
     if (!id) return res.status(400).json({ message: 'Player ID required' });
