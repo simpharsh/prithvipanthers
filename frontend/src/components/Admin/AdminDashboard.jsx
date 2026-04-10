@@ -240,7 +240,7 @@ const ManagePlayers = () => {
 
       <div className="admin-card">
         <table className="admin-table">
-          <thead><tr><th>#</th><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
+          <thead><tr><th>ID</th><th>Name</th><th>Role</th><th>Actions</th></tr></thead>
           <tbody>
             {paginatedPlayers.length === 0 && <tr><td colSpan="4">No players found.</td></tr>}
             {paginatedPlayers.map((p, idx) => (
@@ -418,7 +418,7 @@ const ManageLeads = () => {
       <h2>Contact Form Leads</h2>
       <div className="admin-card" style={{overflowX: 'auto'}}>
         <table className="admin-table">
-          <thead><tr><th>#</th><th>Date</th><th>Name</th><th>Email</th><th>Message</th></tr></thead>
+          <thead><tr><th>No.</th><th>Date</th><th>Name</th><th>Email</th><th>Message</th></tr></thead>
           <tbody>
             {paginatedLeads.length === 0 ? <tr><td colSpan="5">No leads found.</td></tr> : paginatedLeads.map((l, idx) => (
               <tr key={l.id}>
