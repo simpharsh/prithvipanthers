@@ -18,8 +18,11 @@ export default async function handler(req, res) {
     }
 
     // Send confirmation email
+    const smtpPort = Number(process.env.SMTP_PORT || 465);
     const transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: process.env.SMTP_HOST || 'smtp.hostinger.com',
+      port: smtpPort,
+      secure: process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : smtpPort === 465,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
@@ -41,7 +44,7 @@ export default async function handler(req, res) {
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
-      to: [process.env.EMAIL_USER, 'harshlpatel.4274@gmail.com', email],
+      to: [process.env.EMAIL_USER, 'info@pruthvipanthers.com', email],
       replyTo: email,
       subject: `New Contact Form Submission from ${name}`,
       html: `
