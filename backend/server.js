@@ -263,13 +263,37 @@ app.post('/api/contact', async (req, res) => {
 /*                                ADMIN ROUTES                                */
 /* -------------------------------------------------------------------------- */
 
-app.post('/api/admin/login', (req, res) => {
+app.post('/api/admin/login', async (req, res) => {
   const { username, password } = req.body;
+  if (!username || !password) {
+    return res.status(400).json({ message: 'Username and password are required.' });
+  }
+
+  const normalizedUsername = String(username).trim();
+  const normalizedPassword = String(password);
   const adminUser = process.env.ADMIN_USERNAME || 'admin';
   const adminPass = process.env.ADMIN_PASSWORD || 'password123';
+  let isValidCredential = false;
 
-  if (username === adminUser && password === adminPass) {
-    const token = jwt.sign({ role: 'admin' }, JWT_SECRET, { expiresIn: '12h' });
+  if (isAdminDbConnected) {
+    const { data, error } = await adminSupabase
+      .from('admin_users')
+      .select('username, password, is_active')
+      .eq('username', normalizedUsername)
+      .eq('is_active', true)
+      .maybeSingle();
+
+    if (!error && data) {
+      isValidCredential = normalizedPassword === data.password;
+    }
+  }
+
+  if (!isValidCredential) {
+    isValidCredential = normalizedUsername === adminUser && normalizedPassword === adminPass;
+  }
+
+  if (isValidCredential) {
+    const token = jwt.sign({ role: 'admin', username: normalizedUsername }, JWT_SECRET, { expiresIn: '12h' });
     return res.json({ token });
   }
   return res.status(401).json({ message: 'Invalid credentials' });

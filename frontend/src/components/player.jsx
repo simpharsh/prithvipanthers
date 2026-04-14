@@ -2,6 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './player.css';
 import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
+import { supabase } from '../utils/supabaseClient';
 
 const roleTabs = ['All', 'Batters', 'All-Rounders', 'Bowlers', 'Wicket Keepers'];
 
@@ -10,18 +11,44 @@ const Player = () => {
   const [activeTab, setActiveTab] = useState('All');
 
   useEffect(() => {
-    fetch('/api/players')
-      .then(res => res.json())
-      .then((data) => {
-        // Accept both raw array and wrapped payloads from backend.
+    let isMounted = true;
+
+    const loadPlayers = async () => {
+      try {
+        const response = await fetch('/api/players');
+        if (!response.ok) throw new Error('Players API request failed');
+
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+          throw new Error('Players API returned non-JSON response');
+        }
+
+        const data = await response.json();
         const normalizedPlayers = Array.isArray(data)
           ? data
           : Array.isArray(data?.players)
             ? data.players
             : [];
-        setPlayers(normalizedPlayers);
-      })
-      .catch(console.error);
+
+        if (isMounted) setPlayers(normalizedPlayers);
+        return;
+      } catch (error) {
+        console.warn('Players API unavailable, falling back to Supabase:', error.message);
+      }
+
+      if (!supabase) return;
+
+      const { data, error } = await supabase
+        .from('players')
+        .select('id, name, role, cover_image_url, photo_image_url')
+        .order('id', { ascending: true });
+
+      if (!error && isMounted) {
+        setPlayers(Array.isArray(data) ? data : []);
+      }
+    };
+
+    loadPlayers();
     
     // View Tracker
     fetch('/api/track-view', {
@@ -29,6 +56,10 @@ const Player = () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'player' })
     }).catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const visiblePlayers = useMemo(() => {
