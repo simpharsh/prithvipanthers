@@ -1,5 +1,11 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "create-react-app",
   "buildCommand": "npm install && cd frontend && npm install && npm run build",
-  "outputDirectory": "frontend/build"
+  "outputDirectory": "frontend/build",
+  "functions": {
+    "api/**/*.js": {
+      "regions": ["bom1"]
+    }
+  }
 }

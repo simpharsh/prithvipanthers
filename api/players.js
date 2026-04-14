@@ -7,7 +7,10 @@ export default async function handler(req, res) {
   if (method === 'GET') {
     if (!isAdminDbConnected && !isPublicDbConnected) return res.status(200).json([]);
     const db = getDb();
-    const { data, error } = await db.from('players').select('*').order('id', { ascending: true });
+    const { data, error } = await db
+      .from('players')
+      .select('id, name, role, cover_image_url, photo_image_url, created_at')
+      .order('id', { ascending: true });
     
     if (error) return res.status(500).json({ error: error.message });
     return res.status(200).json(data);

@@ -23,6 +23,7 @@
     "eject": "react-scripts eject",
     "postinstall": "patch-package"
   },
+  "proxy": "http://localhost:5000",
   "eslintConfig": {
     "extends": [
       "react-app",

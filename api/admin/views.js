@@ -13,7 +13,10 @@ export default async function handler(req, res) {
 
   const db = getDb();
   try {
-    const { data, error } = await db.from('page_views').select('*').order('page_name', { ascending: true });
+    const { data, error } = await db
+      .from('page_views')
+      .select('id, page_name, view_count, created_at')
+      .order('page_name', { ascending: true });
     if (error) return res.status(500).json({ error: error.message });
     
     return res.status(200).json(data);

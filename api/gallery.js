@@ -82,7 +82,10 @@ export default async function handler(req, res) {
     const { error } = await adminSupabase.from('gallery').delete().eq('id', id);
     if (error) return res.status(500).json({ error: error.message });
     
-    return res.status(200).json({ message: 'Gallery image deleted' });
+        const selectColumns = tableName === 'gallary'
+          ? 'id, name, image_id, created_at'
+          : 'id, name, image_url, created_at';
+        const result = await db.from(tableName).select(selectColumns).order('id', { ascending: false });
   }
 
   return res.status(405).json({ message: 'Method Not Allowed' });
