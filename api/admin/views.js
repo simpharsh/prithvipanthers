@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   try {
     const { data, error } = await db
       .from('page_views')
-      .select('id, page_name, view_count, created_at')
+      .select('id, page_name, view_count')
       .order('page_name', { ascending: true });
     if (error) return res.status(500).json({ error: error.message });
     
