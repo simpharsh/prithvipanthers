@@ -46,7 +46,9 @@ CREATE TABLE IF NOT EXISTS public.page_views (
 ALTER TABLE public.players ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallery ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.gallary ENABLE ROW LEVEL SECURITY;
+ALTER TABLE public.page_views ENABLE ROW LEVEL SECURITY;
 
 CREATE POLICY "Allow public read access to players" ON public.players FOR SELECT USING (true);
 CREATE POLICY "Allow public read access to gallery" ON public.gallery FOR SELECT USING (true);
 CREATE POLICY "Allow public read access to gallary" ON public.gallary FOR SELECT USING (true);
+CREATE POLICY "Allow public read access to page views" ON public.page_views FOR SELECT USING (true);

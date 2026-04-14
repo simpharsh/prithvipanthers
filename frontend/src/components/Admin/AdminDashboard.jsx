@@ -444,22 +444,40 @@ const ManageLeads = () => {
 
 const ManageViews = () => {
   const [views, setViews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
   useEffect(() => {
     const token = localStorage.getItem('adminToken');
+    setLoading(true);
+    setError('');
+
     fetch('/api/admin/views', { headers: { 'Authorization': `Bearer ${token}` }})
-      .then(res => res.json())
-      .then(data => setViews(Array.isArray(data) ? data : []))
-      .catch(console.error);
+      .then(async (res) => {
+        const payload = await res.json().catch(() => ({}));
+        if (!res.ok) {
+          throw new Error(payload.error || payload.message || 'Failed to load page views.');
+        }
+        setViews(Array.isArray(payload) ? payload : []);
+      })
+      .catch((err) => {
+        console.error(err);
+        setError(err.message || 'Failed to load page views.');
+        setViews([]);
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   return (
     <div className="admin-panel-section">
       <h2>Page Views Analytics</h2>
       <div className="admin-card">
+        {loading && <div className="admin-status">Loading page views...</div>}
+        {error && !loading && <div className="admin-status error">{error}</div>}
         <table className="admin-table">
           <thead><tr><th>Page Route</th><th>Total Views</th></tr></thead>
           <tbody>
-            {views.length === 0 ? <tr><td colSpan="2">No analytics found.</td></tr> : views.map(v => (
+            {!loading && !error && views.length === 0 ? <tr><td colSpan="2">No analytics found.</td></tr> : views.map(v => (
               <tr key={v.id}>
                 <td>{v.page_name}</td>
                 <td>{v.view_count}</td>

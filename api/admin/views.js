@@ -1,4 +1,4 @@
-import { getDb, isAdminDbConnected } from '../_utils/supabase.js';
+import { getDb } from '../_utils/supabase.js';
 import { authenticateAdmin } from '../_utils/auth.js';
 
 export default async function handler(req, res) {
@@ -9,9 +9,9 @@ export default async function handler(req, res) {
   const admin = authenticateAdmin(req);
   if (!admin) return res.status(401).json({ message: 'Unauthorized' });
 
-  if (!isAdminDbConnected) return res.status(200).json([]);
-
   const db = getDb();
+  if (!db) return res.status(503).json({ error: 'No Supabase connection configured.' });
+
   try {
     const { data, error } = await db
       .from('page_views')
