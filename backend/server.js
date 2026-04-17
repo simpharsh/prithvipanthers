@@ -183,7 +183,7 @@ app.post('/api/contact', async (req, res) => {
       `,
       attachments: [{
         filename: 'logo.png',
-        path: './logo.png',
+        path: path.join(process.cwd(), 'logo.png'),
         cid: 'pantherslogo'
       }]
     });

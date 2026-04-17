@@ -1,6 +1,7 @@
 import nodemailer from 'nodemailer';
 import { query } from './_utils/db.js';
 import { allowCors } from './_utils/cors.js';
+import path from 'path';
 
 export default async function handler(req, res) {
   if (allowCors(req, res)) return;
@@ -166,7 +167,7 @@ export default async function handler(req, res) {
       `,
       attachments: [{
         filename: 'logo.png',
-        path: './logo.png',
+        path: path.join(process.cwd(), 'logo.png'),
         cid: 'pantherslogo'
       }]
     });

@@ -601,7 +601,6 @@ const ManagePlayers = () => {
       <button className="floating-add-btn" onClick={openAddModal}>+</button>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={isEditing ? 'Edit Player' : 'Add New Player'}>
-        {status.message && <div className={`admin-status ${status.type}`}><span>{status.message}</span></div>}
         <form onSubmit={handleSubmit} className="admin-form">
           <input placeholder="Player Name" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} required />
           <select value={form.role} onChange={e => setForm({ ...form, role: e.target.value })}>
@@ -769,11 +768,6 @@ const ManageGallery = () => {
       <motion.button whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.92 }} className="floating-add-btn" onClick={() => { setStatus({ type: '', message: '' }); setFile(null); setIsModalOpen(true); }}>+</motion.button>
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Upload New Image">
-        {status.message && (
-          <div className={`admin-status ${status.type}`}>
-            <span>{status.message}</span>
-          </div>
-        )}
         <form onSubmit={handleUpload} className="admin-form">
           <input type="file" accept="image/*" onChange={e => setFile(e.target.files[0])} required />
           <button type="submit" className="save-btn">Upload Image</button>

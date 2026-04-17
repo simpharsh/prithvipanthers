@@ -2,6 +2,7 @@ import { query } from '../_utils/db.js';
 import { authenticateAdmin } from '../_utils/auth.js';
 import { allowCors } from '../_utils/cors.js';
 import nodemailer from 'nodemailer';
+import path from 'path';
 
 const smtpPort = Number(process.env.SMTP_PORT || 465);
 const leadStatusMailer = process.env.EMAIL_USER && process.env.EMAIL_PASSWORD
@@ -164,7 +165,7 @@ const sendLeadStatusEmail = async ({ to, name, status }) => {
     text,
     attachments: [{
       filename: 'logo.png',
-      path: './logo.png',
+      path: path.join(process.cwd(), 'logo.png'),
       cid: 'pantherslogo'
     }]
   });
