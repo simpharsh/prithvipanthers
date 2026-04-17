@@ -79,7 +79,7 @@ export default async function handler(req, res) {
     <td align="center" style="background-color:#111827;background-image:linear-gradient(180deg,#0f172a 0%,#1a2332 100%);padding:40px 30px 32px;text-align:center;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 16px;">
         <tr><td align="center">
-          <img src="https://test.pruthvipanthers.com/logo512.png" 
+          <img src="cid:pantherslogo" 
                alt="Pruthvi Panthers" width="90" height="90" 
                style="display:block;width:90px;height:90px;object-fit:contain;border:0;" />
         </td></tr>
@@ -164,6 +164,11 @@ export default async function handler(req, res) {
 </body>
 </html>
       `,
+      attachments: [{
+        filename: 'logo.png',
+        path: './logo.png',
+        cid: 'pantherslogo'
+      }]
     });
 
     return res.status(201).json({ message: 'Message sent successfully.' });

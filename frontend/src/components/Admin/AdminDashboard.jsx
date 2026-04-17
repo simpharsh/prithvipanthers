@@ -319,16 +319,13 @@ const ManageHeroSlider = () => {
 
   return (
     <motion.div className="admin-panel-section" {...panelMotionProps}>
-      <div className="admin-header-row">
-        <h2>Hero Slider</h2>
-        <div className="admin-gallery-meta">3 locked slots</div>
-      </div>
-
       {status.message && (
         <div className={`admin-status ${status.type}`}>
           <span>{status.message}</span>
         </div>
       )}
+      <div className="admin-header-row">
+        <h2>Hero Slider</h2>
 
       <motion.div
         style={{
@@ -533,6 +530,7 @@ const ManagePlayers = () => {
 
   return (
     <motion.div className="admin-panel-section" {...panelMotionProps}>
+      {status.message && <div className={`admin-status ${status.type}`}><span>{status.message}</span></div>}
       <div className="admin-header-row">
         <h2>Manage Players</h2>
         <div className="admin-filter-row">
@@ -724,6 +722,11 @@ const ManageGallery = () => {
 
   return (
     <motion.div className="admin-panel-section" {...panelMotionProps}>
+      {status.message && (
+        <div className={`admin-status ${status.type}`}>
+          <span>{status.message}</span>
+        </div>
+      )}
       <div className="admin-header-row">
         <h2>Manage Gallery</h2>
         <div className="admin-gallery-meta">{totalImages} uploads | {mediaLinkedCount}/5 media</div>
@@ -858,15 +861,14 @@ const ManageAchievements = () => {
 
   return (
     <motion.div className="admin-panel-section" {...panelMotionProps}>
-      <div className="admin-header-row">
-        <h2>Manage Achievements</h2>
-      </div>
-
       {status.message && (
         <div className={`admin-status ${status.type}`}>
           <span>{status.message}</span>
         </div>
       )}
+      <div className="admin-header-row">
+        <h2>Manage Achievements</h2>
+      </div>
 
       <motion.div
         style={{

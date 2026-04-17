@@ -46,7 +46,18 @@ export default async function handler(req, res) {
     try {
       const { name, role, cover_image_url, photo_image_url, player_image_url, is_active = true } = req.body;
       const sql = 'INSERT INTO players (name, role, cover_image_url, photo_image_url, player_image_url, is_active) VALUES (?, ?, ?, ?, ?, ?)';
-      const result = await query(sql, [name, role, cover_image_url, photo_image_url, player_image_url, is_active]);
+      
+      // Ensure no undefined values are passed to query
+      const params = [
+        name || null,
+        role || null,
+        cover_image_url || null,
+        photo_image_url || null,
+        player_image_url || null,
+        is_active === 'true' || is_active === true
+      ];
+      
+      const result = await query(sql, params);
       return res.status(201).json({ message: 'Player created', id: result.insertId });
     } catch (err) {
       return res.status(500).json({ error: err.message });

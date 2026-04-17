@@ -173,11 +173,19 @@ app.post('/api/contact', async (req, res) => {
       replyTo: email,
       subject: `New Contact Form Submission from ${name}`,
       html: `
+        <div style="text-align:center;margin-bottom:20px;">
+          <img src="cid:pantherslogo" alt="Pruthvi Panthers" width="100" />
+        </div>
         <h1>New Contact Enquiry</h1>
         <p><strong>Name:</strong> ${safeName}</p>
         <p><strong>Email:</strong> ${safeEmail}</p>
         <p><strong>Message:</strong><br/>${safeMessage}</p>
       `,
+      attachments: [{
+        filename: 'logo.png',
+        path: './logo.png',
+        cid: 'pantherslogo'
+      }]
     });
 
     return res.status(201).json({ message: 'Message sent successfully.' });
