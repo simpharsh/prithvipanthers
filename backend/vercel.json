@@ -10,5 +10,16 @@
         { "key": "Access-Control-Allow-Headers", "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization" }
       ]
     }
+  ],
+  "rewrites": [
+    { "source": "/api/admin/login", "destination": "/api/admin/login.js" },
+    { "source": "/api/admin/views", "destination": "/api/admin/views.js" },
+    { "source": "/api/admin/leads", "destination": "/api/admin/leads.js" },
+    { "source": "/api/admin/upload-image", "destination": "/api/admin/upload-image.js" },
+    { "source": "/api/admin/delete-image", "destination": "/api/admin/delete-image.js" },
+    { "source": "/api/players", "destination": "/api/players.js" },
+    { "source": "/api/gallery", "destination": "/api/gallery.js" },
+    { "source": "/api/contact", "destination": "/api/contact.js" },
+    { "source": "/api/track-view", "destination": "/api/track-view.js" }
   ]
 }
