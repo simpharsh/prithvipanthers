@@ -3,38 +3,23 @@ import { motion } from 'framer-motion';
 import './gallery.css';
 import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
 import { fetchWithFallback } from '../utils/fetchWithFallback';
+import { resolveImageUrl, normalizeImages } from '../utils/imageUtils';
 
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState([]);
   const tilePattern = ['tile-xl', 'tile-tall', 'tile-wide', 'tile-small', 'tile-wide', 'tile-small', 'tile-tall', 'tile-xl'];
 
-  const resolveImageUrl = (item) => {
-    const rawPath = item?.image_url || item?.imageUrl || item?.url || item?.image_id || item?.imageId || '';
-    if (!rawPath || typeof rawPath !== 'string') return '';
-    if (rawPath.startsWith('http://') || rawPath.startsWith('https://')) return rawPath;
-    return rawPath.startsWith('/')
-      ? rawPath
-      : `/${rawPath}`;
-  };
-
   useEffect(() => {
     let isMounted = true;
-
-    const normalizeImages = (data) => {
-      return Array.isArray(data)
-        ? data.filter((item) => item?.is_active !== false)
-        : Array.isArray(data?.gallery)
-          ? data.gallery.filter((item) => item?.is_active !== false)
-          : Array.isArray(data?.images)
-            ? data.images
-            : [];
-    };
 
     const loadGallery = async () => {
       try {
         const response = await fetchWithFallback('/api/gallery');
         const data = await response.json();
-        if (isMounted) setGalleryImages(normalizeImages(data));
+        if (isMounted) {
+          const items = Array.isArray(data) ? data : (data?.gallery || []);
+          setGalleryImages(items.filter(item => item?.is_active !== false));
+        }
       } catch (error) {
         console.error('Failed to load gallery:', error.message);
       }

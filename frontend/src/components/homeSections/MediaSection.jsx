@@ -5,31 +5,9 @@ import './MediaSection.css';
 import { fetchWithFallback } from '../../utils/fetchWithFallback';
 
 const MediaSection = ({ isVisible, registerSection, mediaImages }) => {
-  const [linkedImages, setLinkedImages] = useState([]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    fetchWithFallback('/api/gallery?mediaLinked=1&includeInactive=0')
-      .then((res) => res.json())
-      .then((data) => {
-        if (!isMounted) return;
-        const images = Array.isArray(data) ? data : [];
-        setLinkedImages(images.filter((item) => item?.image_url));
-      })
-      .catch(() => {
-        if (isMounted) setLinkedImages([]);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
   const resolvedImages = useMemo(() => {
-    const source = linkedImages.length > 0 ? linkedImages.map((item) => item.image_url) : mediaImages;
-    return source.filter(Boolean);
-  }, [linkedImages, mediaImages]);
+    return Array.isArray(mediaImages) ? mediaImages.filter(Boolean) : [];
+  }, [mediaImages]);
 
   const [featureImage, ...tileImages] = resolvedImages;
 

@@ -40,6 +40,16 @@ CREATE TABLE IF NOT EXISTS public.hero_slides (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 
+-- Performance Indexes
+CREATE INDEX IF NOT EXISTS idx_players_is_active ON public.players(is_active);
+CREATE INDEX IF NOT EXISTS idx_gallery_is_active ON public.gallery(is_active);
+CREATE INDEX IF NOT EXISTS idx_gallery_is_media_linked ON public.gallery(is_media_linked);
+CREATE INDEX IF NOT EXISTS idx_gallery_created_at ON public.gallery(created_at DESC);
+CREATE INDEX IF NOT EXISTS idx_achievements_is_active ON public.achievements(is_active);
+CREATE INDEX IF NOT EXISTS idx_hero_slides_is_active ON public.hero_slides(is_active);
+CREATE INDEX IF NOT EXISTS idx_contact_status ON public.contact_form_submissions(status);
+CREATE INDEX IF NOT EXISTS idx_contact_created_at ON public.contact_form_submissions(created_at DESC);
+
 
 
 

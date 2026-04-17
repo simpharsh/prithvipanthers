@@ -62,6 +62,8 @@ const Home = () => {
 
   const [currentSlide, setCurrentSlide] = useState(0);
   const [heroSlidesData, setHeroSlidesData] = useState(DEFAULT_HERO_SLIDES);
+  const [achievementImages, setAchievementImages] = useState([]);
+  const [mediaImages, setMediaImages] = useState([]);
   const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
   const [visibleSections, setVisibleSections] = useState({ hero: true });
   const sectionRefs = useRef({});
@@ -77,26 +79,49 @@ const Home = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const loadHeroSlides = async () => {
+    const loadHomeSummary = async () => {
       try {
-        const response = await fetchWithFallback('/api/gallery?category=hero&includeInactive=1');
+        const response = await fetchWithFallback('/api/home-summary');
         const data = await response.json();
-        const rows = Array.isArray(data) ? data : [];
+        
+        if (!isMounted) return;
+
+        // 1. Process Hero Slides
+        const heroRows = Array.isArray(data.heroSlides) ? data.heroSlides : [];
         const nextSlides = DEFAULT_HERO_SLIDES.map((fallbackSlide) => {
-          const match = rows.find((row) => String(row?.name || '').toLowerCase() === fallbackSlide.name);
+          const match = heroRows.find((row) => String(row?.name || '').toLowerCase() === fallbackSlide.name);
           return {
             ...fallbackSlide,
             img: match?.image_url || fallbackSlide.img,
           };
         });
+        setHeroSlidesData(nextSlides);
 
-        if (isMounted) setHeroSlidesData(nextSlides);
-      } catch {
-        if (isMounted) setHeroSlidesData(DEFAULT_HERO_SLIDES);
+        // 2. Process Achievements
+        const achRows = Array.isArray(data.achievements) ? data.achievements : [];
+        const normalizedAchievements = achRows
+          .filter(row => row.image_url)
+          .map(row => row.image_url);
+        setAchievementImages(normalizedAchievements);
+
+        // 3. Process Media Images
+        const mediaRows = Array.isArray(data.mediaImages) ? data.mediaImages : [];
+        const normalizedMedia = mediaRows
+          .filter(row => row.image_url)
+          .map(row => row.image_url);
+        setMediaImages(normalizedMedia);
+
+      } catch (error) {
+        console.error('Failed to load home summary:', error);
+        if (isMounted) {
+          setHeroSlidesData(DEFAULT_HERO_SLIDES);
+          setAchievementImages([]);
+          setMediaImages([]);
+        }
       }
     };
 
-    loadHeroSlides();
+    loadHomeSummary();
 
     return () => {
       isMounted = false;
@@ -145,8 +170,6 @@ const Home = () => {
   ], []);
 
   const sponsorLoop = useMemo(() => [...sponsorLogos, ...sponsorLogos], [sponsorLogos]);
-  const mediaImages = useMemo(() => [], []);
-  const [achievementImages, setAchievementImages] = useState([]);
 
   // Slider animation logic
   useEffect(() => {
@@ -155,33 +178,6 @@ const Home = () => {
     }, 4500);
     return () => clearInterval(slideInterval);
   }, [heroSlidesData.length]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadAchievementImages = async () => {
-      try {
-        const response = await fetchWithFallback('/api/gallery?category=achievements&includeInactive=0');
-        const data = await response.json();
-        const rows = Array.isArray(data) ? data : [];
-        
-        // Only include images that are actually returned from the API (uploaded)
-        const normalizedImages = rows
-          .filter(row => row.image_url)
-          .map(row => row.image_url);
-
-        if (isMounted) setAchievementImages(normalizedImages);
-      } catch {
-        if (isMounted) setAchievementImages([]);
-      }
-    };
-
-    loadAchievementImages();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   // Scroll visibility observer
   useEffect(() => {

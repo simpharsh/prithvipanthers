@@ -4,7 +4,7 @@ import { allowCors } from '../_utils/cors.js';
 
 export const config = {
   api: {
-    bodyParser: false, // Disable default body parser for file uploads
+    bodyParser: false, // Disable default body parser for streaming
   },
 };
 
@@ -19,22 +19,11 @@ export default async function handler(req, res) {
   if (!admin) return res.status(401).json({ message: 'Unauthorized' });
 
   try {
-    // Note: Vercel Blob 'put' can handle the request stream directly if needed,
-    // but usually, we want to extract the filename and content.
-    // For Vercel Serverless, 'req' is a stream.
-    
     const filename = req.headers['x-filename'] || `upload-${Date.now()}.png`;
     const contentType = req.headers['content-type'] || 'image/png';
 
-    // To avoid "Response body object should not be disturbed or locked", 
-    // we consume the request stream into a buffer first.
-    const chunks = [];
-    for await (const chunk of req) {
-      chunks.push(chunk);
-    }
-    const buffer = Buffer.concat(chunks);
-
-    const blob = await put(filename, buffer, {
+    // Stream the request directly to Vercel Blob for better performance and lower memory usage
+    const blob = await put(filename, req, {
       access: 'public',
       contentType: contentType,
     });
