@@ -1,7 +1,10 @@
-import { getDb } from '../_utils/supabase.js';
+import { query } from '../_utils/db.js';
 import { authenticateAdmin } from '../_utils/auth.js';
+import { allowCors } from '../_utils/cors.js';
 
 export default async function handler(req, res) {
+  if (allowCors(req, res)) return;
+
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
   }
@@ -9,17 +12,9 @@ export default async function handler(req, res) {
   const admin = authenticateAdmin(req);
   if (!admin) return res.status(401).json({ message: 'Unauthorized' });
 
-  const db = getDb();
-  if (!db) return res.status(503).json({ error: 'No Supabase connection configured.' });
-
   try {
-    const { data, error } = await db
-      .from('page_views')
-      .select('id, page_name, view_count')
-      .order('page_name', { ascending: true });
-    if (error) return res.status(500).json({ error: error.message });
-    
-    return res.status(200).json(data);
+    const rows = await query('SELECT id, page_name, view_count FROM page_views ORDER BY page_name ASC');
+    return res.status(200).json(rows);
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

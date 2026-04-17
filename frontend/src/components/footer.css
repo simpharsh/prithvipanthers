@@ -164,28 +164,61 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
+  .footer-container {
+    padding-top: 34px;
+  }
+
   .footer-content {
     flex-direction: column;
-    padding: 0 5%;
-    padding-bottom: 30px;
-    gap: 30px;
+    align-items: stretch;
+    padding: 0 12px 18px;
+    gap: 12px;
+  }
+
+  .footer-col {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 18px;
+    padding: 16px 14px;
+  }
+
+  .brand-col {
+    text-align: center;
   }
 
   .footer-logo-wrapper {
     justify-content: center;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+
+  .footer-logo {
+    height: 40px;
+  }
+
+  .footer-brand-name {
+    font-size: 17px;
+    text-align: center;
   }
 
   .footer-description {
     max-width: 100%;
     text-align: center;
+    font-size: 13px;
+    line-height: 1.45;
+    margin-bottom: 14px;
   }
 
   .social-icons {
     justify-content: center;
+    gap: 12px;
   }
 
   .footer-heading {
     justify-content: center;
+    font-size: 17px;
+    margin-bottom: 14px;
   }
 
   .footer-links,
@@ -193,8 +226,100 @@
     text-align: center;
   }
 
-  .footer-contact-info li {
+  .footer-links {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px 14px;
+  }
+
+  .footer-links li {
+    margin-bottom: 0;
+  }
+
+  .footer-links a {
+    display: inline-flex;
     justify-content: center;
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.05);
+    font-size: 13px;
+  }
+
+  .footer-contact-info li {
+    justify-content: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    flex-wrap: nowrap;
+    text-align: left;
+  }
+
+  .contact-icon {
+    font-size: 17px;
+    margin-top: 0;
+  }
+
+  .location-item {
+    align-items: flex-start;
+  }
+
+  .footer-bottom {
+    padding: 16px 12px;
+  }
+
+  .footer-bottom p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+}
+
+@media (max-width: 420px) {
+  .footer-content {
+    padding: 0 10px 16px;
+    gap: 10px;
+  }
+
+  .footer-col {
+    padding: 14px 12px;
+    border-radius: 16px;
+  }
+
+  .footer-logo {
+    height: 36px;
+  }
+
+  .footer-brand-name {
+    font-size: 16px;
+  }
+
+  .footer-description {
+    font-size: 12px;
+  }
+
+  .footer-heading {
+    font-size: 16px;
+  }
+
+  .footer-links a,
+  .footer-contact-info li {
+    font-size: 12px;
+  }
+
+  .footer-links {
+    gap: 8px 10px;
+  }
+
+  .footer-links a {
+    padding: 7px 8px;
+  }
+
+  .footer-contact-info li {
+    margin-bottom: 10px;
+  }
+
+  .footer-bottom p {
+    font-size: 11px;
   }
 }
 

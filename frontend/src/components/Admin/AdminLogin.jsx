@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import './AdminAuth.css';
 import { pageTransition } from '../../utils/pageMotion';
+import { fetchWithFallback } from '../../utils/fetchWithFallback';
 
 const AdminLogin = () => {
   const [username, setUsername] = useState('');
@@ -13,21 +14,23 @@ const AdminLogin = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/admin/login', {
+      const response = await fetchWithFallback('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password })
       });
-      const data = await response.json();
 
-      if (response.ok) {
-        localStorage.setItem('adminToken', data.token);
+      const payload = await response.json();
+
+      if (response.ok && payload?.token) {
+        localStorage.setItem('adminToken', payload.token);
         navigate('/admin/dashboard');
-      } else {
-        setError(data.message || 'Login failed');
+        return;
       }
+
+      setError(payload?.message || payload?.error || 'Login failed');
     } catch (err) {
-      setError('Server error');
+      setError(err.message || 'Server error');
     }
   };
 

@@ -18,6 +18,7 @@
   font-weight: 400;
   letter-spacing: 1px;
   font-size: clamp(38px, 6vw, 66px);
+  color: #ffffff;
 }
 
 .gallery-hero p {
@@ -106,6 +107,7 @@
 @media (max-width: 760px) {
   .gallery-grid {
     grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 6px;
   }
 
   .gallery-item.tile-small {
@@ -126,8 +128,14 @@
 }
 
 @media (max-width: 520px) {
+  .gallery-grid-section {
+    width: min(100%, calc(100% - 16px));
+    margin: 26px auto 56px;
+  }
+
   .gallery-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 5px;
   }
 
   .gallery-item.tile-small,
@@ -139,12 +147,12 @@
 
   .gallery-item.tile-small,
   .gallery-item.tile-wide {
-    --tile-row: 20;
+    --tile-row: 14;
   }
 
   .gallery-item.tile-tall,
   .gallery-item.tile-xl {
-    --tile-row: 28;
+    --tile-row: 22;
   }
 }
 

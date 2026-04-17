@@ -2,7 +2,7 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './player.css';
 import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
-import { supabase } from '../utils/supabaseClient';
+import { fetchWithFallback } from '../utils/fetchWithFallback';
 
 const roleTabs = ['All', 'Batters', 'All-Rounders', 'Bowlers', 'Wicket Keepers'];
 
@@ -15,43 +15,24 @@ const Player = () => {
 
     const loadPlayers = async () => {
       try {
-        const response = await fetch('/api/players');
-        if (!response.ok) throw new Error('Players API request failed');
-
-        const contentType = response.headers.get('content-type') || '';
-        if (!contentType.includes('application/json')) {
-          throw new Error('Players API returned non-JSON response');
-        }
-
+        const response = await fetchWithFallback('/api/players');
         const data = await response.json();
         const normalizedPlayers = Array.isArray(data)
-          ? data
+          ? data.filter((player) => player?.is_active !== false)
           : Array.isArray(data?.players)
-            ? data.players
+            ? data.players.filter((player) => player?.is_active !== false)
             : [];
 
         if (isMounted) setPlayers(normalizedPlayers);
-        return;
       } catch (error) {
-        console.warn('Players API unavailable, falling back to Supabase:', error.message);
-      }
-
-      if (!supabase) return;
-
-      const { data, error } = await supabase
-        .from('players')
-        .select('id, name, role, cover_image_url, photo_image_url')
-        .order('id', { ascending: true });
-
-      if (!error && isMounted) {
-        setPlayers(Array.isArray(data) ? data : []);
+        console.error('Failed to load players:', error.message);
       }
     };
 
     loadPlayers();
     
     // View Tracker
-    fetch('/api/track-view', {
+    fetchWithFallback('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'player' })
@@ -87,28 +68,46 @@ const Player = () => {
       exit="exit"
     >
       <section className="players-layout">
-        <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35 }}>
+        <motion.h1 initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
           OUR TEAM
         </motion.h1>
 
-        <div className="player-filters" role="tablist" aria-label="Player role filters">
+        <motion.div
+          className="player-filters"
+          role="tablist"
+          aria-label="Player role filters"
+          variants={sectionStagger}
+          initial="hidden"
+          animate="visible"
+        >
           {roleTabs.map((tab) => (
-            <button
+            <motion.button
               key={tab}
               type="button"
               role="tab"
               aria-selected={activeTab === tab}
               className={`filter-chip ${activeTab === tab ? 'active' : ''}`}
               onClick={() => setActiveTab(tab)}
+              variants={itemReveal}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             >
               {tab}
-            </button>
+            </motion.button>
           ))}
-        </div>
+        </motion.div>
 
         {playersByRole.map((group) => (
-          <section key={group.role} className="role-section">
-            <h2>{group.role}</h2>
+          <motion.section
+            key={group.role}
+            className="role-section"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <motion.h2 initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, amount: 0.5 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}>{group.role}</motion.h2>
             <motion.div
               className="players-grid"
               variants={sectionStagger}
@@ -117,14 +116,17 @@ const Player = () => {
               viewport={{ once: true, amount: 0.15 }}
             >
               {group.list.map((player) => (
-                <motion.article className="player-card" key={player.id} variants={itemReveal}>
+                <motion.article className="player-card" key={player.id} variants={itemReveal} whileHover={{ y: -4 }} transition={{ duration: 0.32, ease: [0.22, 1, 0.36, 1] }}>
+                  {player.player_image_url ? (
+                    <img className="card-image player-thumbnail" src={player.player_image_url} alt={`${player.name} profile`} />
+                  ) : null}
                   <img className="card-image cover" src={player.cover_image_url} alt={`${player.name} cover`} />
                   <img className="card-image photo" src={player.photo_image_url} alt={player.name} />
                   <div className="player-name">{player.name}</div>
                 </motion.article>
               ))}
             </motion.div>
-          </section>
+          </motion.section>
         ))}
       </section>
     </motion.div>

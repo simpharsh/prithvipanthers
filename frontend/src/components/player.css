@@ -67,11 +67,18 @@
 
 .card-image.cover {
   opacity: 1;
+  z-index: 1;
 }
 
 .card-image.photo {
   opacity: 0;
   transform: scale(1.03);
+  z-index: 2;
+}
+
+.player-thumbnail {
+  z-index: 0;
+  opacity: 0.68;
 }
 
 .player-card::after {
@@ -147,8 +154,14 @@
 }
 
 @media (max-width: 640px) {
+  .players-layout {
+    width: min(100%, calc(100% - 20px));
+    padding: 36px 0 48px;
+  }
+
   .players-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
   }
 
   .player-name {
@@ -163,27 +176,28 @@
 
 @media (max-width: 420px) {
   .players-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .player-name {
-    font-size: 11px;
-  }
-
-  .players-layout h1 {
-    font-size: 38px;
-  }
-
-  .role-section h2 {
-    font-size: 28px;
-  }
-
-  .player-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
 
+  .player-name {
+    font-size: 9px;
+  }
+
+  .players-layout h1 {
+    font-size: 34px;
+  }
+
+  .role-section h2 {
+    font-size: 24px;
+  }
+
+  .player-filters {
+    gap: 6px;
+  }
+
   .filter-chip {
-    font-size: 10px;
+    font-size: 9px;
   }
 }
 

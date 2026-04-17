@@ -3,23 +3,14 @@ import { motion } from 'framer-motion';
 import './home.css';
 import HeroSlider from './homeSections/HeroSlider';
 import AboutSection from './homeSections/AboutSection';
+import { fetchWithFallback } from '../utils/fetchWithFallback';
 import MediaSection from './homeSections/MediaSection';
 import AchievementsSection from './homeSections/AchievementsSection';
 import OwnersSection from './homeSections/OwnersSection';
 import SponsorsBenefitsSection from './homeSections/SponsorsBenefitsSection';
 
-// Exact image paths requested
-import slider1 from '../assets/home/slider-1.jpeg';
-import slider2 from '../assets/home/slider-2.jpeg';
-import slider3 from '../assets/home/slider-3.jpeg';
-
 import aboutImage1 from '../assets/about/image-1.jpeg';
 import aboutImage2 from '../assets/about/image-2.jpeg';
-import media1 from '../assets/home/media-1.jpeg';
-import media2 from '../assets/home/media-2.jpeg';
-import media3 from '../assets/home/media-3.jpeg';
-import media4 from '../assets/home/media-4.jpeg';
-import media5 from '../assets/home/media-5.jpeg';
 import achPriyanshu from '../assets/home/achivment-priyanshu.jpeg';
 import achMohit from '../assets/home/achivment-mohit.jpeg';
 import achPureanshu from '../assets/home/achivment-pureanshu.jpeg';
@@ -36,7 +27,30 @@ import opufnt from '../assets/home/opufnt.png';
 import nptsi from '../assets/home/nptsi.png';
 import bharat from '../assets/home/bharat.png';
 import mahakali from '../assets/home/mahakali.png';
-import { pageTransition } from '../utils/pageMotion';
+import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
+
+const DEFAULT_ACHIEVEMENT_IMAGES = [achPriyanshu, achMohit, achPureanshu, achJay];
+const HERO_PLACEHOLDER_IMAGE = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"><rect width="1600" height="900" fill="%230f172a"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23f8fafc" font-family="Arial" font-size="56">Hero Image</text></svg>';
+const DEFAULT_HERO_SLIDES = [
+  {
+    name: 'hero-1',
+    img: HERO_PLACEHOLDER_IMAGE,
+    title: 'JOIN THE LEGACY',
+    subtitle: 'Be part of something extraordinary, join the Panther family',
+  },
+  {
+    name: 'hero-2',
+    img: HERO_PLACEHOLDER_IMAGE,
+    title: 'TOP 3 FINISH IN BPL 2025',
+    subtitle: 'Coming back stronger for BPL 2026',
+  },
+  {
+    name: 'hero-3',
+    img: HERO_PLACEHOLDER_IMAGE,
+    title: 'CHAMPION MINDSET',
+    subtitle: 'Unleashing the power of determination and teamwork',
+  },
+];
 
 const Home = () => {
   const stats = useMemo(() => [
@@ -46,36 +60,47 @@ const Home = () => {
     { value: 5040, label: 'MINUTES OF LIVE\nFOOTAGE ON GLOBAL\nOTT' },
   ], []);
 
-  // Updated slider data to match text to specific images
-  const heroSlidesData = [
-    {
-      img: slider1,
-      title: "JOIN THE LEGACY",
-      subtitle: "Be part of something extraordinary, join the Panther family"
-    },
-    {
-      img: slider2,
-      title: "TOP 3 FINISH IN BPL 2025",
-      subtitle: "Coming back stronger for BPL 2026"
-    },
-    {
-      img: slider3,
-      title: "CHAMPION MINDSET",
-      subtitle: "Unleashing the power of determination and teamwork"
-    }
-  ];
-
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroSlidesData, setHeroSlidesData] = useState(DEFAULT_HERO_SLIDES);
   const [animatedStats, setAnimatedStats] = useState(stats.map(() => 0));
   const [visibleSections, setVisibleSections] = useState({ hero: true });
   const sectionRefs = useRef({});
 
   useEffect(() => {
-    fetch('/api/track-view', {
+    fetchWithFallback('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'home' })
     }).catch(() => {});
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadHeroSlides = async () => {
+      try {
+        const response = await fetchWithFallback('/api/gallery?category=hero&includeInactive=1');
+        const data = await response.json();
+        const rows = Array.isArray(data) ? data : [];
+        const nextSlides = DEFAULT_HERO_SLIDES.map((fallbackSlide) => {
+          const match = rows.find((row) => String(row?.name || '').toLowerCase() === fallbackSlide.name);
+          return {
+            ...fallbackSlide,
+            img: match?.image_url || fallbackSlide.img,
+          };
+        });
+
+        if (isMounted) setHeroSlidesData(nextSlides);
+      } catch {
+        if (isMounted) setHeroSlidesData(DEFAULT_HERO_SLIDES);
+      }
+    };
+
+    loadHeroSlides();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const registerSection = (sectionKey) => (element) => {
@@ -120,8 +145,8 @@ const Home = () => {
   ], []);
 
   const sponsorLoop = useMemo(() => [...sponsorLogos, ...sponsorLogos], [sponsorLogos]);
-  const mediaImages = useMemo(() => [media1, media2, media3, media4, media5], []);
-  const achievementImages = useMemo(() => [achPriyanshu, achMohit, achPureanshu, achJay], []);
+  const mediaImages = useMemo(() => [], []);
+  const [achievementImages, setAchievementImages] = useState(DEFAULT_ACHIEVEMENT_IMAGES);
 
   // Slider animation logic
   useEffect(() => {
@@ -130,6 +155,33 @@ const Home = () => {
     }, 4500);
     return () => clearInterval(slideInterval);
   }, [heroSlidesData.length]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadAchievementImages = async () => {
+      try {
+        const response = await fetchWithFallback('/api/gallery?category=achievements&includeInactive=1');
+        const data = await response.json();
+        const rows = Array.isArray(data) ? data : [];
+        const normalizedImages = DEFAULT_ACHIEVEMENT_IMAGES.map((fallbackImage, index) => {
+          const slotName = `achievement-${index + 1}`;
+          const match = rows.find((row) => String(row?.name || '').toLowerCase() === slotName);
+          return match?.image_url || fallbackImage;
+        });
+
+        if (isMounted) setAchievementImages(normalizedImages);
+      } catch {
+        if (isMounted) setAchievementImages(DEFAULT_ACHIEVEMENT_IMAGES);
+      }
+    };
+
+    loadAchievementImages();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Scroll visibility observer
   useEffect(() => {
@@ -194,14 +246,18 @@ const Home = () => {
         onDotClick={setCurrentSlide}
       />
 
-      <section
+      <motion.section
         className={`stats-section reveal-section ${visibleSections.stats ? 'is-visible' : ''}`}
         ref={registerSection('stats')}
         data-section="stats"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        <div className="stats-grid">
+        <motion.div className="stats-grid" variants={sectionStagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.2 }}>
           {stats.map((stat, index) => (
-            <div className="stat-card" key={stat.label}>
+            <motion.div className="stat-card" key={stat.label} variants={itemReveal}>
               <span className="stat-value">{animatedStats[index]}</span>
               <span className="stat-label">
                 {stat.label.split('\n').map((line, idx, lines) => (
@@ -211,10 +267,10 @@ const Home = () => {
                   </React.Fragment>
                 ))}
               </span>
-            </div>
+            </motion.div>
           ))}
-        </div>
-      </section>
+        </motion.div>
+      </motion.section>
 
       <AboutSection
         isVisible={visibleSections.about}
@@ -223,6 +279,33 @@ const Home = () => {
         aboutImage2={aboutImage2}
         aboutPoints={aboutPoints}
       />
+
+      <motion.section
+        className={`sponsor-strip reveal-section ${visibleSections.brand ? 'is-visible' : ''}`}
+        ref={registerSection('brand')}
+        data-section="brand"
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.15 }}
+        transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      >
+        <motion.div className="content-shell sponsor-strip-inner" variants={sectionStagger} initial="hidden" whileInView="visible" viewport={{ once: true, amount: 0.15 }}>
+          <motion.div className="sponsor-copy" variants={itemReveal}>
+            <span className="ghost-word">SPONSORS</span>
+            <h2>POWER PARTNERS: PANTHERS'S VALUED SPONSORS</h2>
+            <p>Pruthvi Panthers proudly supports youth cricket through training camps and development programs - making every sponsor part of our winning journey.</p>
+          </motion.div>
+          <motion.div className="sponsor-marquee" variants={itemReveal}>
+            <div className="sponsor-marquee-track">
+              {sponsorLoop.map((logo, index) => (
+              <div className="sponsor-logo" key={`sponsor-${logo.id}-${index}`}>
+                <img src={logo.img} alt={logo.alt} />
+              </div>
+              ))}
+            </div>
+          </motion.div>
+        </motion.div>
+      </motion.section>
 
       <MediaSection
         isVisible={visibleSections.media}
@@ -247,29 +330,6 @@ const Home = () => {
         registerSection={registerSection}
         benefitCards={benefitCards}
       />
-
-      <section
-        className={`sponsor-strip reveal-section ${visibleSections.brand ? 'is-visible' : ''}`}
-        ref={registerSection('brand')}
-        data-section="brand"
-      >
-        <div className="content-shell sponsor-strip-inner">
-          <div className="sponsor-copy">
-            <span className="ghost-word">SPONSORS</span>
-            <h2>POWER PARTNERS: PANTHERS'S VALUED SPONSORS</h2>
-            <p>Pruthvi Panthers proudly supports youth cricket through training camps and development programs - making every sponsor part of our winning journey.</p>
-          </div>
-          <div className="sponsor-marquee">
-            <div className="sponsor-marquee-track">
-              {sponsorLoop.map((logo, index) => (
-              <div className="sponsor-logo" key={`sponsor-${logo.id}-${index}`}>
-                <img src={logo.img} alt={logo.alt} />
-              </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
     </motion.div>
   );
 };

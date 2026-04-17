@@ -1,15 +1,272 @@
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap');
 
+:root {
+  /* Colors - WCAG AA Compliant */
+  --primary: #f05244;
+  --primary-hover: #d32f2f;
+  --accent: #c19b6c;
+  --bg: #ffffff;
+  --surface: #f4f6f8;
+  --surface-hover: #f8fafc;
+  --text: #0f172a;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  
+  /* Status Colors */
+  --success: #10b981;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --info: #3b82f6;
+
+  /* Spacing Scale (4px base) */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* Border Radius */
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.06), 0 2px 4px -1px rgba(0,0,0,0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -2px rgba(0,0,0,0.04);
+  --shadow-hover: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+  
+  /* Typography Fluid Scale */
+  --text-xs: clamp(0.75rem, 0.7vw + 0.5rem, 0.8rem);
+  --text-sm: clamp(0.875rem, 0.8vw + 0.6rem, 0.95rem);
+  --text-base: clamp(1rem, 0.9vw + 0.7rem, 1.1rem);
+  --text-lg: clamp(1.125rem, 1vw + 0.8rem, 1.25rem);
+  --text-xl: clamp(1.25rem, 1.2vw + 1rem, 1.5rem);
+  --text-2xl: clamp(1.5rem, 1.5vw + 1.2rem, 1.8rem);
+  --text-3xl: clamp(1.8rem, 2vw + 1.4rem, 2.2rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  /* Dark mode override examples if utilized by components */
+  /* If app is strictly light, these variables help prep for future */
+}
+
+html {
+  scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
 body {
   margin: 0;
   font-family: 'Poppins', 'Inter', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.6;
+  color: var(--text);
+  background-color: var(--bg);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Bebas Neue', 'Poppins', sans-serif;
+  line-height: 1.2;
+  margin-top: 0;
+  color: var(--text);
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+p { margin-top: 0; margin-bottom: var(--space-4); }
 
 code {
   font-family: 'Consolas', 'Courier New', monospace;
 }
 
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Global Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Base Utilities */
+.btn-primary, .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  border: none;
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--primary-hover);
+  transform: scale(1.03);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--primary);
+  border: 1px solid var(--primary);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: rgba(240, 82, 68, 0.05); /* --primary alpha */
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* Form Styles */
+.input-group {
+  position: relative;
+  margin-bottom: var(--space-4);
+}
+
+.input-styled {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: inherit;
+  font-size: var(--text-base);
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.input-styled:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(240, 82, 68, 0.15);
+  outline: none;
+}
+
+/* Floating Label Pattern */
+.label-floating {
+  position: absolute;
+  left: var(--space-4);
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--bg);
+  color: var(--muted);
+  transition: all 150ms ease;
+  pointer-events: none;
+  font-size: var(--text-base);
+}
+
+.input-styled:focus ~ .label-floating,
+.input-styled:not(:placeholder-shown) ~ .label-floating {
+  top: 0;
+  font-size: var(--text-xs);
+  color: var(--primary);
+  padding: 0 4px;
+}
+
+/* Shimmer Loader */
+.skeleton-shimmer {
+  background: #f6f7f8;
+  background-image: linear-gradient(
+    to right,
+    #f6f7f8 0%,
+    #edeef1 20%,
+    #f6f7f8 40%,
+    #f6f7f8 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 800px 100%; 
+  animation-duration: 1.5s;
+  animation-fill-mode: forwards; 
+  animation-iteration-count: infinite;
+  animation-name: placeholderShimmer;
+  animation-timing-function: linear;
+}
+
+@keyframes placeholderShimmer {
+  0% { background-position: -468px 0; }
+  100% { background-position: 468px 0; }
+}
+
+/* Validation Shake */
+.shake-animation {
+  animation: shakeError 0.4s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+@keyframes shakeError {
+  0%, 100% { transform: translateX(0); }
+  25%, 75% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+}
+
+/* Ripple */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0; left: 0;
+  pointer-events: none;
+  background-image: radial-gradient(circle, #fff 10%, transparent 10.01%);
+  background-repeat: no-repeat;
+  background-position: 50%;
+  transform: scale(10, 10);
+  opacity: 0;
+  transition: transform .5s, opacity 1s;
+}
+.ripple:active::after {
+  transform: scale(0, 0);
+  opacity: 0.3;
+  transition: 0s;
+}
+
+/* Global Prefers reduced motion override */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

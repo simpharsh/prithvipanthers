@@ -38,6 +38,7 @@
   font-size: clamp(48px, 7vw, 64px);
   font-weight: 400;
   letter-spacing: 1px;
+  color: #ffffff;
 }
 
 .contact-header p {
@@ -72,7 +73,7 @@
   font-family: 'Bebas Neue', sans-serif;
   font-size: 13px;
   font-weight: 500;
-  color: #b7bfce;
+  color: #ffffff;
   margin-bottom: 6px;
 }
 

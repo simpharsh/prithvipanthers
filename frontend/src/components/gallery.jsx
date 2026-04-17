@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './gallery.css';
 import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
-import { supabase } from '../utils/supabaseClient';
+import { fetchWithFallback } from '../utils/fetchWithFallback';
 
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState([]);
@@ -22,9 +22,9 @@ const Gallery = () => {
 
     const normalizeImages = (data) => {
       return Array.isArray(data)
-        ? data
+        ? data.filter((item) => item?.is_active !== false)
         : Array.isArray(data?.gallery)
-          ? data.gallery
+          ? data.gallery.filter((item) => item?.is_active !== false)
           : Array.isArray(data?.images)
             ? data.images
             : [];
@@ -32,51 +32,18 @@ const Gallery = () => {
 
     const loadGallery = async () => {
       try {
-        const response = await fetch('/api/gallery');
-        if (!response.ok) throw new Error('Gallery API request failed');
-
-        const contentType = response.headers.get('content-type') || '';
-        if (!contentType.includes('application/json')) {
-          throw new Error('Gallery API returned non-JSON response');
-        }
-
+        const response = await fetchWithFallback('/api/gallery');
         const data = await response.json();
         if (isMounted) setGalleryImages(normalizeImages(data));
-        return;
       } catch (error) {
-        console.warn('Gallery API unavailable, falling back to Supabase:', error.message);
-      }
-
-      if (!supabase) return;
-
-      const galleryResult = await supabase
-        .from('gallery')
-        .select('id, name, image_url, created_at')
-        .order('id', { ascending: false });
-
-      if (!galleryResult.error) {
-        if (isMounted) setGalleryImages(Array.isArray(galleryResult.data) ? galleryResult.data : []);
-        return;
-      }
-
-      const gallaryResult = await supabase
-        .from('gallary')
-        .select('id, name, image_id, created_at')
-        .order('id', { ascending: false });
-
-      if (!gallaryResult.error && isMounted) {
-        const mappedData = (Array.isArray(gallaryResult.data) ? gallaryResult.data : []).map((item) => ({
-          ...item,
-          image_url: item.image_id,
-        }));
-        setGalleryImages(mappedData);
+        console.error('Failed to load gallery:', error.message);
       }
     };
 
     loadGallery();
 
     // View Tracker
-    fetch('/api/track-view', {
+    fetchWithFallback('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'gallery' })

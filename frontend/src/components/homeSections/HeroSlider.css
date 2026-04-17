@@ -6,22 +6,29 @@
   overflow: hidden;
 }
 
-.hero-slider-track {
-  display: flex;
+.hero-slide-viewport {
+  position: relative;
   width: 100%;
   height: 100%;
-  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+  overflow: hidden;
 }
 
 .hero-slide {
   position: relative;
-  min-width: 100%;
+  width: 100%;
   height: 100%;
   background-position: center center;
   background-size: cover;
   display: flex;
   align-items: center;
   justify-content: center;
+  backface-visibility: hidden;
+}
+
+.hero-slide-animated {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
 }
 
 .hero-overlay {
@@ -89,10 +96,13 @@
 .btn-secondary {
   background: #fff;
   color: var(--ink);
+  border: 1px solid #fff;
 }
 
-.btn-secondary:hover {
-  background: #eaeaea;
+.slider-buttons .btn.btn-secondary:hover:not(:disabled) {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
 }
 
 .hero-dots {

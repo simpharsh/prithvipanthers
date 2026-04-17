@@ -130,7 +130,8 @@
   display: flex;
   flex-wrap: nowrap;
   width: max-content;
-  animation: logoMarquee 30s linear infinite;
+  animation: logoMarquee 30s linear infinite !important;
+  will-change: transform;
   align-items: center;
 }
 

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { motion } from 'framer-motion';
 import './about.css'; // Standard case-sensitive import
 import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
+import { fetchWithFallback } from '../utils/fetchWithFallback';
 
 // --- TOP SECTION IMAGES ---
 import aboutImg1 from '../assets/about/image-1.jpeg';
@@ -48,7 +49,7 @@ const About = () => {
   ];
 
   useEffect(() => {
-    fetch('/api/track-view', {
+    fetchWithFallback('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'about' })
@@ -65,34 +66,40 @@ const About = () => {
     >
       
       {/* ================= TOP INTRO SECTION ================= */}
-      <section className="about-intro-section">
-        <div className="about-intro-images">
+      <motion.section
+        className="about-intro-section"
+        variants={sectionStagger}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.18 }}
+      >
+        <motion.div className="about-intro-images" variants={itemReveal}>
           {/* Two images stacked vertically, matching image_9.png */}
-          <img src={aboutImg1} alt="Team huddle" className="intro-img-top" />
-          <img src={aboutImg2} alt="Team gathering" className="intro-img-bottom" />
-        </div>
+          <motion.img src={aboutImg1} alt="Team huddle" className="intro-img-top" whileHover={{ scale: 1.02 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} />
+          <motion.img src={aboutImg2} alt="Team gathering" className="intro-img-bottom" whileHover={{ scale: 1.02 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }} />
+        </motion.div>
         
-        <div className="about-intro-content">
-          <h1 className="about-title">ABOUT PRUTHVI PANTHERS MEHSANA</h1>
-          <p>
+        <motion.div className="about-intro-content" variants={itemReveal}>
+          <motion.h1 className="about-title" variants={itemReveal}>ABOUT PRUTHVI PANTHERS MEHSANA</motion.h1>
+          <motion.p variants={itemReveal}>
             Proudly representing Mehsana, Pruthvi Panthers is one of the most passionate and determined teams in the Baroda Premier League (BPL), a tournament that brings together cricket, community, and competition at its finest.
-          </p>
-          <p>
+          </motion.p>
+          <motion.p variants={itemReveal}>
             Built on strength, strategy, and ambition, Pruthvi Panthers is more than just a team; it's a symbol of Mehsana's fighting spirit. Every season, we step onto the field with one goal: to play fearless cricket and make our city proud.
-          </p>
-          <p>
+          </motion.p>
+          <motion.p variants={itemReveal}>
             In the last BPL season, we finished third on the table, showing that consistency, teamwork, and belief can take us far. But this is just the beginning. The Panthers are ready to roar again in BPL 2026, stronger, sharper, and hungrier than ever before.
-          </p>
-          <p>
+          </motion.p>
+          <motion.p variants={itemReveal}>
             The team is powered by four proud owners from Mehsana, each bringing their own vision and leadership.
-          </p>
-          <p className="highlight-text">
+          </motion.p>
+          <motion.p className="highlight-text" variants={itemReveal}>
             The roar is back. The spirit is stronger. Get ready for BPL 2026.
-          </p>
+          </motion.p>
           {/* Matches Navbar 'Contact Us' button style */}
-          <button className="know-more-btn">Know More</button>
-        </div>
-      </section>
+          <motion.button className="know-more-btn" variants={itemReveal} whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.96 }} transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}>Know More</motion.button>
+        </motion.div>
+      </motion.section>
 
       {/* ================= OWNERS SECTION ================= */}
       <section className="about-owners-section">

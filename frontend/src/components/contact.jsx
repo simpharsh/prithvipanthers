@@ -6,6 +6,8 @@ import { FiAlertCircle, FiCheckCircle, FiMail, FiPhone } from 'react-icons/fi';
 import { IoLocationOutline } from 'react-icons/io5';
 import logo from '../assets/common/logo.png';
 
+import { fetchWithFallback } from '../utils/fetchWithFallback';
+
 const initialState = {
   name: '',
   email: '',
@@ -18,7 +20,7 @@ const Contact = () => {
   const [submitState, setSubmitState] = useState('idle');
 
   useEffect(() => {
-    fetch('/api/track-view', {
+    fetchWithFallback('/api/track-view', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ page: 'contact' })
@@ -41,7 +43,7 @@ const Contact = () => {
 
 
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetchWithFallback('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
