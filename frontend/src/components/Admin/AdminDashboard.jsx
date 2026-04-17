@@ -326,6 +326,7 @@ const ManageHeroSlider = () => {
       )}
       <div className="admin-header-row">
         <h2>Hero Slider</h2>
+      </div>
 
       <motion.div
         style={{
