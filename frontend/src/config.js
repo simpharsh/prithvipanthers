@@ -7,9 +7,18 @@ export const buildApiUrl = (path) => {
     return normalizedPath;
   }
 
-  // Ensure no double slashes
-  const base = API_BASE_URL.endsWith('/') ? API_BASE_URL.slice(0, -1) : API_BASE_URL;
-  return `${base}${normalizedPath}`;
+  // Ensure the base URL has a protocol
+  let base = API_BASE_URL.trim();
+  if (base && !base.startsWith('http://') && !base.startsWith('https://')) {
+    // If it looks like a domain but lacks protocol, add https://
+    base = `https://${base}`;
+  }
+
+  // Remove trailing slash
+  base = base.endsWith('/') ? base.slice(0, -1) : base;
+  
+  const finalUrl = `${base}${normalizedPath}`;
+  return finalUrl;
 };
 
 const config = {

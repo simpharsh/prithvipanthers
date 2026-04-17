@@ -22,14 +22,17 @@ const uploadImage = async (file) => {
   const token = localStorage.getItem('adminToken');
 
   // Vercel Blob via our API
+  // We use fetchWithFallback but must be careful with headers for File bodies
   const response = await fetchWithFallback('/api/admin/upload-image', {
     method: 'POST',
     headers: {
       'Authorization': token ? `Bearer ${token}` : '',
-      'x-filename': file.name,
-      'Content-Type': file.type || 'image/png'
+      'x-filename': encodeURIComponent(file.name),
+      // We omit Content-Type here to let the browser set it with the correct boundary if needed,
+      // or we set it explicitly if our backend expects the raw stream.
+      'Content-Type': file.type || 'application/octet-stream'
     },
-    body: file, // Send file directly as body for streaming to Vercel Blob
+    body: file,
   });
 
   const payload = await response.json();
