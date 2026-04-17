@@ -2,7 +2,6 @@ import { query } from '../_utils/db.js';
 import { authenticateAdmin } from '../_utils/auth.js';
 import { allowCors } from '../_utils/cors.js';
 import nodemailer from 'nodemailer';
-import path from 'path';
 
 const smtpPort = Number(process.env.SMTP_PORT || 465);
 const leadStatusMailer = process.env.EMAIL_USER && process.env.EMAIL_PASSWORD
@@ -67,7 +66,7 @@ const buildLeadStatusEmailHtml = ({ name, email, status }) => {
     <td align="center" style="background-color:#111827;background-image:linear-gradient(180deg,#0f172a 0%,#1a2332 100%);padding:40px 30px 32px;text-align:center;">
       <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:0 auto 16px;">
         <tr><td align="center">
-          <img src="cid:pantherslogo"
+          <img src="https://mpyxfritlulkxtnpbiqr.supabase.co/storage/v1/object/public/uploads/logo.png"
                alt="Pruthvi Panthers" width="90" height="90"
                style="display:block;width:90px;height:90px;object-fit:contain;border:0;" />
         </td></tr>
@@ -162,12 +161,7 @@ const sendLeadStatusEmail = async ({ to, name, status }) => {
     to,
     subject,
     html,
-    text,
-    attachments: [{
-      filename: 'logo.png',
-      path: path.join(process.cwd(), 'logo.png'),
-      cid: 'pantherslogo'
-    }]
+    text
   });
 
   return true;
