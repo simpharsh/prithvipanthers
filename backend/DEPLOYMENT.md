@@ -13,12 +13,15 @@ This project is configured for a split deployment:
 1.  Log in to your Hostinger hPanel.
 2.  Go to **Databases** -> **MySQL Databases**.
 3.  Create a new database and user.
+    -   **Database Name**: `u768511311_panthers`
+    -   **Username**: `u768511311_panthers`
+    -   **Password**: `Panthers@2210`
 4.  **Remote MySQL**:
     -   Go to **Remote MySQL**.
     -   Add `0.0.0.0` to the "IP (IPv4 or IPv6/Wildcard)" field to allow Vercel to connect.
 5.  **Run Migration**:
     -   Open **phpMyAdmin** for your database.
-    -   Import the `schema.sql` file.
+    -   Import the `backend/schema.sql` file.
 6.  **Seed Admin**:
     ```sql
     INSERT INTO admin_users (username, password, is_active) VALUES ('admin', 'your_password', 1);
@@ -39,15 +42,19 @@ This project is configured for a split deployment:
 ## 3. Backend Deployment (Vercel)
 
 1.  Push your code to GitHub and import to Vercel.
-2.  **Environment Variables**:
+2.  **Project Settings**:
+    -   **Root Directory**: `backend`
+    -   **Build Command**: Leave empty or set to `npm run build` (which runs `echo 'No build step required'`).
+    -   **Output Directory**: Leave default.
+3.  **Environment Variables**:
     Set the following in Vercel:
-    -   `DB_HOST`: Your Hostinger DB Host.
+    -   `DB_HOST`: Your Hostinger DB Host (e.g., `sqlXXX.hostinger.com` - **Do not use 127.0.0.1**).
     -   `DB_PORT`: `3306`
-    -   `DB_NAME`: Your database name.
-    -   `DB_USER`: Your database user.
-    -   `DB_PASSWORD`: Your database password.
+    -   `DB_NAME`: `u768511311_panthers`
+    -   `DB_USER`: `u768511311_panthers`
+    -   `DB_PASSWORD`: `Panthers@2210`
     -   `JWT_SECRET`: A long random string.
-    -   `ALLOWED_ORIGINS`: `https://your-hostinger-domain.com,https://www.your-hostinger-domain.com`
+    -   `ALLOWED_ORIGINS`: `https://pruthvipanthers.com,https://www.pruthvipanthers.com`
     -   `BLOB_READ_WRITE_TOKEN`: (Added automatically by Vercel Storage).
     -   `EMAIL_USER`, `EMAIL_PASSWORD`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`: For email notifications.
 

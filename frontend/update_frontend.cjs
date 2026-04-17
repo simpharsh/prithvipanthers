@@ -497,11 +497,12 @@ const cssContent = `.floating-add-btn { position: fixed; bottom: 40px; right: 40
 .del-btn:hover { background: #ff273a; }
 `;
 
-fs.writeFileSync('frontend/src/components/Admin/AdminDashboard.jsx', jsxContent);
+fs.writeFileSync('src/components/Admin/AdminDashboard.jsx', jsxContent);
 
-const existingCss = fs.readFileSync('frontend/src/components/Admin/AdminDashboard.css', 'utf8');
+const existingCss = fs.readFileSync('src/components/Admin/AdminDashboard.css', 'utf8');
 if (!existingCss.includes('.floating-add-btn')) {
-    fs.writeFileSync('frontend/src/components/Admin/AdminDashboard.css', existingCss + '\\n' + cssContent);
+    fs.writeFileSync('src/components/Admin/AdminDashboard.css', existingCss + '\n' + cssContent);
 }
+
 
 console.log("Successfully updated AdminDashboard.jsx and AdminDashboard.css.");

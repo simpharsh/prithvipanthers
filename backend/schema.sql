@@ -64,4 +64,4 @@ CREATE TABLE IF NOT EXISTS page_views (
 );
 
 -- Seed admin user (placeholder)
--- INSERT INTO admin_users (username, password) VALUES ('admin', 'hashed_password_here');
+INSERT INTO admin_users (username, password, is_active) VALUES ('admin', 'admin_password', 1);
