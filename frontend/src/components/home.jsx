@@ -146,7 +146,7 @@ const Home = () => {
 
   const sponsorLoop = useMemo(() => [...sponsorLogos, ...sponsorLogos], [sponsorLogos]);
   const mediaImages = useMemo(() => [], []);
-  const [achievementImages, setAchievementImages] = useState(DEFAULT_ACHIEVEMENT_IMAGES);
+  const [achievementImages, setAchievementImages] = useState([]);
 
   // Slider animation logic
   useEffect(() => {
@@ -161,18 +161,18 @@ const Home = () => {
 
     const loadAchievementImages = async () => {
       try {
-        const response = await fetchWithFallback('/api/gallery?category=achievements&includeInactive=1');
+        const response = await fetchWithFallback('/api/gallery?category=achievements&includeInactive=0');
         const data = await response.json();
         const rows = Array.isArray(data) ? data : [];
-        const normalizedImages = DEFAULT_ACHIEVEMENT_IMAGES.map((fallbackImage, index) => {
-          const slotName = `achievement-${index + 1}`;
-          const match = rows.find((row) => String(row?.name || '').toLowerCase() === slotName);
-          return match?.image_url || fallbackImage;
-        });
+        
+        // Only include images that are actually returned from the API (uploaded)
+        const normalizedImages = rows
+          .filter(row => row.image_url)
+          .map(row => row.image_url);
 
         if (isMounted) setAchievementImages(normalizedImages);
       } catch {
-        if (isMounted) setAchievementImages(DEFAULT_ACHIEVEMENT_IMAGES);
+        if (isMounted) setAchievementImages([]);
       }
     };
 

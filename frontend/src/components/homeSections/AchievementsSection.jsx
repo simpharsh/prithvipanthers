@@ -2,6 +2,8 @@ import React from 'react';
 import './AchievementsSection.css';
 
 const AchievementsSection = ({ isVisible, registerSection, achievementImages }) => {
+  if (!achievementImages || achievementImages.length === 0) return null;
+
   return (
     <section
       className={`content-shell achievements-section reveal-section ${isVisible ? 'is-visible' : ''}`}

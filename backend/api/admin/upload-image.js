@@ -26,7 +26,15 @@ export default async function handler(req, res) {
     const filename = req.headers['x-filename'] || `upload-${Date.now()}.png`;
     const contentType = req.headers['content-type'] || 'image/png';
 
-    const blob = await put(filename, req, {
+    // To avoid "Response body object should not be disturbed or locked", 
+    // we consume the request stream into a buffer first.
+    const chunks = [];
+    for await (const chunk of req) {
+      chunks.push(chunk);
+    }
+    const buffer = Buffer.concat(chunks);
+
+    const blob = await put(filename, buffer, {
       access: 'public',
       contentType: contentType,
     });
