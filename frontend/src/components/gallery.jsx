@@ -1,31 +1,42 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import './gallery.css';
 import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
 import { fetchWithFallback } from '../utils/fetchWithFallback';
-import { resolveImageUrl, normalizeImages } from '../utils/imageUtils';
+import { resolveImageUrl } from '../utils/imageUtils';
+import LoadingState from './LoadingUI/LoadingState';
+import ProgressiveImage from './LoadingUI/ProgressiveImage';
 
 const Gallery = () => {
   const [galleryImages, setGalleryImages] = useState([]);
+  const [requestState, setRequestState] = useState('loading');
+  const [errorMessage, setErrorMessage] = useState('');
   const tilePattern = ['tile-xl', 'tile-tall', 'tile-wide', 'tile-small', 'tile-wide', 'tile-small', 'tile-tall', 'tile-xl'];
+
+  const loadGallery = useCallback(async () => {
+    setRequestState('loading');
+    setErrorMessage('');
+
+    try {
+      const response = await fetchWithFallback('/api/gallery');
+      const data = await response.json();
+      const items = Array.isArray(data) ? data : (data?.gallery || []);
+      setGalleryImages(items.filter(item => item?.is_active !== false));
+      setRequestState('success');
+    } catch (error) {
+      console.error('Failed to load gallery:', error.message);
+      setGalleryImages([]);
+      setRequestState('error');
+      setErrorMessage('Please check your internet connection and try again.');
+    }
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
 
-    const loadGallery = async () => {
-      try {
-        const response = await fetchWithFallback('/api/gallery');
-        const data = await response.json();
-        if (isMounted) {
-          const items = Array.isArray(data) ? data : (data?.gallery || []);
-          setGalleryImages(items.filter(item => item?.is_active !== false));
-        }
-      } catch (error) {
-        console.error('Failed to load gallery:', error.message);
-      }
-    };
-
-    loadGallery();
+    if (isMounted) {
+      loadGallery();
+    }
 
     // View Tracker
     fetchWithFallback('/api/track-view', {
@@ -37,7 +48,7 @@ const Gallery = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [loadGallery]);
 
   return (
     <motion.div
@@ -53,18 +64,34 @@ const Gallery = () => {
       </section>
 
       <section className="gallery-grid-section">
-        <motion.div
-          className="gallery-grid"
-          variants={sectionStagger}
-          initial="hidden"
-          animate="visible"
+        <LoadingState
+          status={requestState}
+          skeleton="gallery"
+          onRetry={loadGallery}
+          errorTitle="Unable to load gallery right now"
+          errorMessage={errorMessage}
+          spinnerLabel="Loading gallery"
         >
-          {galleryImages.map((item, index) => (
-            <motion.figure className={`gallery-item ${tilePattern[index % tilePattern.length]}`} key={item.id} variants={itemReveal}>
-              <img src={resolveImageUrl(item)} alt={`Pruthvi Panthers gallery ${item.id || index + 1}`} loading="lazy" />
-            </motion.figure>
-          ))}
-        </motion.div>
+          <motion.div
+            className="gallery-grid"
+            variants={sectionStagger}
+            initial="hidden"
+            animate="visible"
+          >
+            {galleryImages.length > 0 ? galleryImages.map((item, index) => (
+              <motion.figure className={`gallery-item ${tilePattern[index % tilePattern.length]}`} key={item.id} variants={itemReveal}>
+                <ProgressiveImage
+                  src={resolveImageUrl(item)}
+                  alt={`Pruthvi Panthers gallery ${item.id || index + 1}`}
+                  className="gallery-photo"
+                  containerClassName="gallery-photo-shell"
+                />
+              </motion.figure>
+            )) : (
+              <div className="gallery-empty-state">Fresh photos will appear here soon.</div>
+            )}
+          </motion.div>
+        </LoadingState>
       </section>
     </motion.div>
   );

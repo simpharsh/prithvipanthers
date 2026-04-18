@@ -9,6 +9,8 @@ import achMohit from '../../assets/home/achivment-mohit.jpeg';
 import achPureanshu from '../../assets/home/achivment-pureanshu.jpeg';
 import achJay from '../../assets/home/achivment-jay.jpeg';
 import { pageTransition } from '../../utils/pageMotion';
+import { InlineSpinner } from '../LoadingUI/LoadingState';
+import ProgressiveImage from '../LoadingUI/ProgressiveImage';
 import { FaEye, FaEyeSlash, FaEdit, FaTrash, FaLink, FaUnlink, FaCheck, FaTimes } from 'react-icons/fa';
 
 /**
@@ -217,6 +219,7 @@ const ManageHeroSlider = () => {
   );
   const [status, setStatus] = useState({ type: '', message: '' });
   const [heroDraftFiles, setHeroDraftFiles] = useState({});
+  const [isUploading, setIsUploading] = useState(false);
   const [updatingSlot, setUpdatingSlot] = useState('');
 
   useEffect(() => {
@@ -266,6 +269,7 @@ const ManageHeroSlider = () => {
 
     try {
       setUpdatingSlot(slot.name);
+      setIsUploading(true);
       setStatus({ type: 'info', message: `Checking ${slot.label.toLowerCase()} dimensions...` });
       const fileDimensions = await readImageDimensions(file);
 
@@ -314,6 +318,7 @@ const ManageHeroSlider = () => {
       setStatus({ type: 'error', message: error.message || 'Failed to update hero image.' });
     } finally {
       setUpdatingSlot('');
+      setIsUploading(false);
     }
   };
 
@@ -346,10 +351,11 @@ const ManageHeroSlider = () => {
               </span>
             </div>
             <h3 style={{ marginBottom: '16px' }}>{slot.label}</h3>
-            <img
+            <ProgressiveImage
               src={slot.image_url}
               alt={slot.label}
-              style={{ width: '100%', height: '260px', objectFit: 'cover', borderRadius: '12px', marginBottom: '14px', background: '#f8fafc' }}
+              className="admin-slot-image"
+              containerClassName="admin-slot-image-container"
             />
             <div className="admin-upload-block">
               <label className="admin-upload-title" htmlFor={`hero-upload-${slot.name}`}>
@@ -375,10 +381,15 @@ const ManageHeroSlider = () => {
                 <button
                   type="button"
                   className="save-btn admin-upload-update-btn"
-                  disabled={!heroDraftFiles[slot.name] || updatingSlot === slot.name}
+                  disabled={!heroDraftFiles[slot.name] || updatingSlot === slot.name || isUploading}
                   onClick={() => saveHeroSlide(slot, heroDraftFiles[slot.name])}
                 >
-                  {updatingSlot === slot.name ? 'Updating...' : 'Update'}
+                  {updatingSlot === slot.name ? (
+                    <>
+                      <InlineSpinner size="sm" label="Updating" />
+                      <span style={{ marginLeft: '8px' }}>Updating...</span>
+                    </>
+                  ) : 'Update'}
                 </button>
                 <span className="admin-upload-file-name">
                   {heroDraftFiles[slot.name]?.name || 'No file selected'}
@@ -405,6 +416,7 @@ const ManagePlayers = () => {
   const itemsPerPage = 10;
 
   const [form, setForm] = useState({ name: '', role: '', cover: null, photo: null, isActive: true });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
 
   useEffect(() => {
@@ -447,11 +459,15 @@ const ManagePlayers = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     setStatus({ type: '', message: '' });
+    setIsSubmitting(true);
     const token = localStorage.getItem('adminToken');
 
     if (!isEditing && (!form.cover || !form.photo)) {
       setStatus({ type: 'error', message: 'Images are required for a new player.' });
+      setIsSubmitting(false);
       return;
     }
 
@@ -492,6 +508,8 @@ const ManagePlayers = () => {
       fetchPlayers();
     } catch (e) {
       setStatus({ type: 'error', message: e.message || 'Failed to save player.' });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -619,7 +637,14 @@ const ManagePlayers = () => {
             <input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} />
             Active Player
           </label>
-          <button type="submit" className="save-btn">{isEditing ? 'Save Changes' : 'Add Player'}</button>
+          <button type="submit" className="save-btn" disabled={isSubmitting}>
+            {isSubmitting ? (
+              <>
+                <InlineSpinner size="sm" label="Saving" />
+                <span style={{ marginLeft: '8px' }}>Saving...</span>
+              </>
+            ) : (isEditing ? 'Save Changes' : 'Add Player')}
+          </button>
         </form>
       </Modal>
     </motion.div>
@@ -630,6 +655,7 @@ const ManageGallery = () => {
   const [images, setImages] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [file, setFile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -655,7 +681,8 @@ const ManageGallery = () => {
 
   const handleUpload = async (e) => {
     e.preventDefault();
-    if (!file) return;
+    if (!file || isUploading) return;
+    setIsUploading(true);
     setStatus({ type: 'info', message: 'Uploading image to storage...' });
     const token = localStorage.getItem('adminToken');
 
@@ -682,6 +709,8 @@ const ManageGallery = () => {
       }
     } catch (err) {
       setStatus({ type: 'error', message: err.message || 'Failed to upload gallery image.' });
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -740,7 +769,12 @@ const ManageGallery = () => {
                 {img.is_media_linked ? 'Media-linked' : (normalizeBoolean(img.is_active) ? 'Active' : 'Inactive')}
               </span>
             </div>
-            <img src={img.image_url} alt="gallery" className="admin-gallery-image" />
+            <ProgressiveImage
+              src={img.image_url}
+              alt="gallery"
+              className="admin-gallery-image"
+              containerClassName="admin-gallery-image-shell"
+            />
             <div className="admin-gallery-actions">
               <motion.button whileTap={{ scale: 0.94 }} title="Toggle Visibility" className={`toggle-btn view-btn ${normalizeBoolean(img.is_active) ? 'active' : ''}`} onClick={() => updateGalleryImage(img.id, { is_active: !normalizeBoolean(img.is_active) })}>
                 {normalizeBoolean(img.is_active) ? <FaEye /> : <FaEyeSlash />}
@@ -769,8 +803,15 @@ const ManageGallery = () => {
 
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Upload New Image">
         <form onSubmit={handleUpload} className="admin-form">
-          <input type="file" accept="image/*" onChange={e => setFile(e.target.files[0])} required />
-          <button type="submit" className="save-btn">Upload Image</button>
+          <input type="file" accept="image/*" onChange={e => setFile(e.target.files[0])} required disabled={isUploading} />
+          <button type="submit" className="save-btn" disabled={isUploading}>
+            {isUploading ? (
+              <>
+                <InlineSpinner size="sm" label="Uploading image" />
+                <span style={{ marginLeft: '8px' }}>Uploading...</span>
+              </>
+            ) : 'Upload Image'}
+          </button>
         </form>
       </Modal>
     </motion.div>
@@ -787,6 +828,7 @@ const ManageAchievements = () => {
     }))
   );
   const [status, setStatus] = useState({ type: '', message: '' });
+  const [updatingSlot, setUpdatingSlot] = useState('');
 
   useEffect(() => {
     if (status.message) {
@@ -817,7 +859,8 @@ const ManageAchievements = () => {
   useEffect(() => { fetchAchievements(); }, []);
 
   const saveAchievementImage = async (slot, file) => {
-    if (!file) return;
+    if (!file || updatingSlot) return;
+    setUpdatingSlot(slot.name);
 
     const token = localStorage.getItem('adminToken');
     try {
@@ -851,6 +894,8 @@ const ManageAchievements = () => {
       fetchAchievements();
     } catch (error) {
       setStatus({ type: 'error', message: error.message || 'Failed to update achievement image.' });
+    } finally {
+      setUpdatingSlot('');
     }
   };
 
@@ -878,10 +923,11 @@ const ManageAchievements = () => {
         {slots.map((slot) => (
           <motion.div key={slot.name} className="admin-card" style={{ marginBottom: 0 }} variants={gridItem} whileHover={{ y: -3 }} transition={{ duration: 0.2 }}>
             <h3 style={{ marginBottom: '16px' }}>{slot.label}</h3>
-            <img
+            <ProgressiveImage
               src={slot.image_url}
               alt={slot.label}
-              style={{ width: '100%', height: '260px', objectFit: 'cover', borderRadius: '12px', marginBottom: '14px', background: '#f8fafc' }}
+              className="admin-slot-image"
+              containerClassName="admin-slot-image-container"
             />
             <div className="admin-upload-block">
               <label className="admin-upload-title" htmlFor={`achievement-upload-${slot.name}`}>
@@ -893,9 +939,15 @@ const ManageAchievements = () => {
                 type="file"
                 accept="image/*"
                 onChange={(event) => saveAchievementImage(slot, event.target.files?.[0])}
+                disabled={updatingSlot !== ''}
               />
               <label htmlFor={`achievement-upload-${slot.name}`} className="admin-upload-trigger">
-                Choose File
+                {updatingSlot === slot.name ? (
+                  <>
+                    <InlineSpinner size="sm" label="Uploading" />
+                    <span style={{ marginLeft: '8px' }}>Updating...</span>
+                  </>
+                ) : 'Choose File'}
               </label>
               <p className="admin-upload-hint">Upload a clean image for this slot</p>
             </div>

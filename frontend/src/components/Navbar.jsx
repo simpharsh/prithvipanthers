@@ -9,11 +9,17 @@ const Navbar = () => {
 
   React.useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 60);
+      // Use a small buffer to prevent flickering
+      const threshold = 60;
+      if (window.scrollY > threshold && !isScrolled) {
+        setIsScrolled(true);
+      } else if (window.scrollY < threshold - 10 && isScrolled) {
+        setIsScrolled(false);
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isScrolled]);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);

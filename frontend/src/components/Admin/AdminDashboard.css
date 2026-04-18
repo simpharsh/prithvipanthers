@@ -283,12 +283,31 @@
   transform: translateY(-5px);
 }
 
-.admin-gallery-item img {
+.admin-gallery-item img.admin-gallery-image {
   width: 100%;
   height: 180px;
   object-fit: cover;
   border-radius: 8px;
   margin-bottom: 12px;
+}
+
+.admin-gallery-image-shell {
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.admin-slot-image-container,
+.admin-slot-image {
+  width: 100%;
+  height: 260px;
+  border-radius: 12px;
+  margin-bottom: 14px;
+}
+
+.admin-slot-image {
+  object-fit: cover;
 }
 
 .block-btn {

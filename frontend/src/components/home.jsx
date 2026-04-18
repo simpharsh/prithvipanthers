@@ -11,10 +11,6 @@ import SponsorsBenefitsSection from './homeSections/SponsorsBenefitsSection';
 
 import aboutImage1 from '../assets/about/image-1.jpeg';
 import aboutImage2 from '../assets/about/image-2.jpeg';
-import achPriyanshu from '../assets/home/achivment-priyanshu.jpeg';
-import achMohit from '../assets/home/achivment-mohit.jpeg';
-import achPureanshu from '../assets/home/achivment-pureanshu.jpeg';
-import achJay from '../assets/home/achivment-jay.jpeg';
 import ownerAjay from '../assets/about/ajay.jpeg';
 import ownerGirish from '../assets/about/girish.jpeg';
 import ownerJugal from '../assets/about/jugal.jpeg';
@@ -29,7 +25,6 @@ import bharat from '../assets/home/bharat.png';
 import mahakali from '../assets/home/mahakali.png';
 import { itemReveal, pageTransition, sectionStagger } from '../utils/pageMotion';
 
-const DEFAULT_ACHIEVEMENT_IMAGES = [achPriyanshu, achMohit, achPureanshu, achJay];
 const HERO_PLACEHOLDER_IMAGE = 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900"><rect width="1600" height="900" fill="%230f172a"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="%23f8fafc" font-family="Arial" font-size="56">Hero Image</text></svg>';
 const DEFAULT_HERO_SLIDES = [
   {
