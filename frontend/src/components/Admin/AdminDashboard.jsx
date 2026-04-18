@@ -415,7 +415,7 @@ const ManagePlayers = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
-  const [form, setForm] = useState({ name: '', role: '', cover: null, photo: null, isActive: true });
+  const [form, setForm] = useState({ name: '', role: '', cover: null, photo: null, existingCover: null, existingPhoto: null, isActive: true, removeCover: false, removePhoto: false });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [status, setStatus] = useState({ type: '', message: '' });
 
@@ -438,7 +438,7 @@ const ManagePlayers = () => {
   const openAddModal = () => {
     setIsEditing(false);
     setEditId(null);
-    setForm({ name: '', role: 'Batters', cover: null, photo: null, isActive: true });
+    setForm({ name: '', role: 'Batters', cover: null, photo: null, existingCover: null, existingPhoto: null, isActive: true, removeCover: false, removePhoto: false });
     setStatus({ type: '', message: '' });
     setIsModalOpen(true);
   };
@@ -451,10 +451,22 @@ const ManagePlayers = () => {
       role: player.role || 'Batters',
       cover: null,
       photo: null,
+      existingCover: player.cover_image_url || null,
+      existingPhoto: player.photo_image_url || null,
       isActive: normalizeBoolean(player.is_active),
+      removeCover: false,
+      removePhoto: false,
     });
     setStatus({ type: '', message: '' });
     setIsModalOpen(true);
+  };
+
+  const handleRemoveExistingImage = (type) => {
+    setForm(prev => ({
+      ...prev,
+      [type === 'cover' ? 'existingCover' : 'existingPhoto']: null,
+      [type === 'cover' ? 'removeCover' : 'removePhoto']: true
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -465,8 +477,8 @@ const ManagePlayers = () => {
     setIsSubmitting(true);
     const token = localStorage.getItem('adminToken');
 
-    if (!isEditing && (!form.cover || !form.photo)) {
-      setStatus({ type: 'error', message: 'Images are required for a new player.' });
+    if (!isEditing && (!form.cover && !form.existingCover) && (!form.photo && !form.existingPhoto)) {
+      setStatus({ type: 'error', message: 'At least one image is required for a new player.' });
       setIsSubmitting(false);
       return;
     }
@@ -494,8 +506,8 @@ const ManagePlayers = () => {
           name: form.name,
           role: form.role,
           is_active: form.isActive,
-          ...(cover_image_url && { cover_image_url }),
-          ...(photo_image_url && { photo_image_url }),
+          ...(cover_image_url ? { cover_image_url } : form.removeCover ? { cover_image_url: null } : {}),
+          ...(photo_image_url ? { photo_image_url } : form.removePhoto ? { photo_image_url: null } : {}),
         })
       });
 
@@ -524,16 +536,24 @@ const ManagePlayers = () => {
   };
 
   const toggleActive = async (player) => {
-    const token = localStorage.getItem('adminToken');
-    await fetchWithFallback('/api/players', {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ id: player.id, is_active: !normalizeBoolean(player.is_active) })
-    });
-    fetchPlayers();
+    try {
+      const token = localStorage.getItem('adminToken');
+      const newStatus = !normalizeBoolean(player.is_active);
+      const res = await fetchWithFallback('/api/players', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id: player.id, is_active: newStatus })
+      });
+      if (!res.ok) throw new Error('API error');
+      
+      // Optimitiscally update local state so the switch feels instant
+      setPlayers(prev => prev.map(p => p.id === player.id ? { ...p, is_active: newStatus } : p));
+    } catch (err) {
+      setStatus({ type: 'error', message: 'Failed to update player status' });
+    }
   };
 
   // Setup list logic: Reverse to show latest first, then search, then paginate.
@@ -593,13 +613,17 @@ const ManagePlayers = () => {
                 <td>{p.name}</td>
                 <td>{p.role}</td>
                 <td>
-                  <span className={`admin-badge ${normalizeBoolean(p.is_active) ? 'active' : 'inactive'}`}>
-                    {normalizeBoolean(p.is_active) ? 'Active' : 'Inactive'}
-                  </span>
+                  <label className="switch">
+                    <input 
+                      type="checkbox" 
+                      checked={normalizeBoolean(p.is_active)} 
+                      onChange={() => toggleActive(p)} 
+                    />
+                    <span className="slider round"></span>
+                  </label>
                 </td>
                 <td>
                   <div className="admin-row-actions">
-                    <button className={`toggle-btn view-btn ${normalizeBoolean(p.is_active) ? '' : 'reject'}`} onClick={() => toggleActive(p)} title={normalizeBoolean(p.is_active) ? 'Deactivate' : 'Activate'}>{normalizeBoolean(p.is_active) ? <FaEye /> : <FaEyeSlash />}</button>
                     <button className="edit-btn" onClick={() => openEditModal(p)} title="Edit"><FaEdit /></button>
                     <button className="del-btn" onClick={() => handleDelete(p.id)} title="Delete"><FaTrash /></button>
                   </div>
@@ -628,10 +652,29 @@ const ManagePlayers = () => {
             <option value="Wicket Keepers">Wicket Keepers</option>
           </select>
           <div className="admin-form-files">
-            <label>Cover Image: {isEditing && "(Leave blank to keep existing)"}</label>
-            <input type="file" accept="image/*" onChange={e => setForm({ ...form, cover: e.target.files[0] })} />
-            <label>Profile Cutout Image: {isEditing && "(Leave blank to keep existing)"}</label>
-            <input type="file" accept="image/*" onChange={e => setForm({ ...form, photo: e.target.files[0] })} />
+            <label>Cover Image: {isEditing && !form.existingCover && "(Upload new)"}</label>
+            {isEditing && form.existingCover ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <img src={form.existingCover} alt="Cover" style={{ width: '120px', height: '120px', objectFit: 'contain', background: '#ccc', borderRadius: '4px' }} />
+                <button type="button" className="del-btn" onClick={() => handleRemoveExistingImage('cover')} title="Delete image">
+                  <FaTrash />
+                </button>
+              </div>
+            ) : (
+              <input type="file" accept="image/*" onChange={e => setForm({ ...form, cover: e.target.files[0] })} />
+            )}
+
+            <label>Profile Cutout Image: {isEditing && !form.existingPhoto && "(Upload new)"}</label>
+            {isEditing && form.existingPhoto ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <img src={form.existingPhoto} alt="Profile Cutout" style={{ width: '120px', height: '120px', objectFit: 'contain', background: '#ccc', borderRadius: '4px' }} />
+                <button type="button" className="del-btn" onClick={() => handleRemoveExistingImage('photo')} title="Delete image">
+                  <FaTrash />
+                </button>
+              </div>
+            ) : (
+              <input type="file" accept="image/*" onChange={e => setForm({ ...form, photo: e.target.files[0] })} />
+            )}
           </div>
           <label className="admin-checkbox">
             <input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} />
@@ -669,7 +712,7 @@ const ManageGallery = () => {
   }, [status]);
 
   const fetchGallery = () => {
-    fetchWithFallback('/api/gallery?includeInactive=1')
+    fetchWithFallback('/api/gallery?includeInactive=1', { skipCache: true })
       .then(res => res.json())
       .then(data => setImages(Array.isArray(data) ? data : []))
       .catch(err => console.error(err));
@@ -700,9 +743,23 @@ const ManageGallery = () => {
       });
 
       if (res.ok) {
+        const payload = await res.json().catch(() => ({}));
         setIsModalOpen(false);
         setFile(null);
-        fetchGallery();
+        
+        // Optimistically insert the new image at the top
+        const newImage = {
+          id: payload.id || Date.now(),
+          image_url,
+          name: file.name,
+          is_active: true,
+          is_media_linked: false,
+          created_at: new Date().toISOString()
+        };
+        setImages(prev => [newImage, ...prev]);
+
+        // Still fetch to ensure server state is perfectly synced
+        setTimeout(() => fetchGallery(), 500);
       } else {
         const payload = await res.json().catch(() => ({}));
         setStatus({ type: 'error', message: payload.error || payload.message || 'Failed to upload.' });
@@ -746,7 +803,7 @@ const ManageGallery = () => {
     fetchGallery();
   };
 
-  const sortedImages = useMemo(() => [...images].reverse(), [images]);
+  const sortedImages = useMemo(() => [...images], [images]);
   const paginatedImages = sortedImages.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   return (
@@ -965,7 +1022,7 @@ const ManageLeads = () => {
     refreshLeads();
   }, []);
 
-  const sortedLeads = useMemo(() => [...leads].reverse(), [leads]);
+  const sortedLeads = useMemo(() => [...leads], [leads]);
   const newLeads = useMemo(() => sortedLeads.filter((lead) => normalizeLeadStatus(lead) === 'new'), [sortedLeads]);
   const processedLeads = useMemo(
     () => sortedLeads.filter((lead) => {

@@ -11,10 +11,15 @@ const ProgressiveImage = ({
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const imgRef = React.useRef(null);
 
   useEffect(() => {
     setIsLoaded(false);
     setHasError(false);
+    if (imgRef.current && imgRef.current.complete) {
+      if (imgRef.current.naturalWidth === 0) setHasError(true);
+      else setIsLoaded(true);
+    }
   }, [src]);
 
   return (
@@ -34,6 +39,7 @@ const ProgressiveImage = ({
         </div>
       ) : (
         <img
+          ref={imgRef}
           src={src}
           alt={alt}
           loading={loading}
